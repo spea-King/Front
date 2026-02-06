@@ -65,6 +65,23 @@
   gap: 0.75rem;
 }
 
+.styleBadge {
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #fff;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.styleFriendly {
+  background: rgba(16, 185, 129, 0.9);
+}
+
+.stylePressure {
+  background: rgba(239, 68, 68, 0.9);
+}
+
 .liveSessionBadge {
   padding: 0.625rem 1.25rem;
   background: rgba(255, 255, 255, 0.9);

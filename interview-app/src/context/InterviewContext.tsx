@@ -17,7 +17,7 @@ interface InterviewContextType extends InterviewState {
   setResumeText: (text: string | null) => void;
   setSelfIntroText: (text: string | null) => void;
   setSettings: (settings: InterviewSettings) => void;
-  setElapsedTime: (time: number) => void;
+  setElapsedTime: (time: number | ((prev: number) => number)) => void;
   setVoiceVolume: (volume: number[]) => void;
   setQuestions: (questions: Question[]) => void;
   resetInterview: () => void;
@@ -123,7 +123,11 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, settings }));
   };
 
-  const setElapsedTime = (time: number) => {
+  const setElapsedTime = (time: number | ((prev: number) => number)) => {
+    if (typeof time === 'function') {
+      setElapsedTimeState(prev => time(prev));
+      return;
+    }
     setElapsedTimeState(time);
   };
 

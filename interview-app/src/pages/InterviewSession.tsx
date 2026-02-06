@@ -34,6 +34,10 @@ export function InterviewSession() {
   const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
 
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
+  const interviewerImage =
+    settings.voice === 'male'
+      ? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80'
+      : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
   const isFinishingRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -211,7 +215,7 @@ export function InterviewSession() {
             <div className={styles.videoBackgroundInner}>
               <img
                 className={styles.interviewerImage}
-                src="https://gmcnqdpighpxhzpesqwf.supabase.co/storage/v1/object/public/generated-images/image-fdadce2a-0128-44f8-8992-c1b9c7d214c3.jpg"
+                src={interviewerImage}
                 alt="AI Interviewer"
               />
             </div>
@@ -222,6 +226,9 @@ export function InterviewSession() {
             <div className={styles.liveSessionBadge}>
               <span className={styles.liveIndicator} />
               LIVE SESSION
+            </div>
+            <div className={`${styles.styleBadge} ${settings.style === 'pressure' ? styles.stylePressure : styles.styleFriendly}`}>
+              {settings.style === 'pressure' ? '압박 면접' : '친절 면접'}
             </div>
             <div className={styles.companyBadge}>
               {selectedCompany?.toUpperCase() || 'TOSS'} | {selectedJob || 'Frontend Dev'}
@@ -327,7 +334,9 @@ export function InterviewSession() {
               <li className={styles.guideItem}>
                 <i className={`fa-solid fa-circle-check ${styles.guideCheckIcon}`} />
                 <span className={styles.guideText}>
-                  기술적 포인트를 구체적으로 보여 주세요.
+                  {settings.style === 'pressure'
+                    ? '근거와 수치를 중심으로 짧게 답해 주세요.'
+                    : '기술적 포인트를 구체적으로 보여 주세요.'}
                 </span>
               </li>
             </ul>
