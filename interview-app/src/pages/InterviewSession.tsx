@@ -10,6 +10,7 @@ export function InterviewSession() {
     currentQuestionIndex,
     questions,
     elapsedTime,
+    remainingTime,
     voiceVolume,
     isRecording,
     selectedCompany,
@@ -17,6 +18,7 @@ export function InterviewSession() {
     settings,
     sessionId,
     setElapsedTime,
+    setRemainingTime,
     setIsRecording,
     setCurrentQuestionIndex,
     setVoiceVolume,
@@ -32,6 +34,7 @@ export function InterviewSession() {
   const [showQuestionText, setShowQuestionText] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
+  const [timerActive, setTimerActive] = useState(false);
 
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
   const interviewerImage = (() => {
@@ -57,28 +60,29 @@ export function InterviewSession() {
   }, [currentQuestionIndex, questions.length, fetchNextQuestion]);
 
   useEffect(() => {
-    if (!isRecording) return;
+    if (!timerActive) return;
 
     const interval = setInterval(() => {
       setElapsedTime(prev => prev + 1);
+      setRemainingTime(prev => Math.max(0, prev - 1));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRecording, setElapsedTime]);
+  }, [timerActive, setElapsedTime, setRemainingTime]);
 
   useEffect(() => {
-    const remaining = Math.max(0, 120 - elapsedTime);
-    const minutes = Math.floor(remaining / 60);
-    const seconds = remaining % 60;
+    const safeRemaining = Number.isFinite(remainingTime) ? remainingTime : 120;
+    const minutes = Math.floor(safeRemaining / 60);
+    const seconds = safeRemaining % 60;
     setFormattedTime(
       `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     );
 
-    if (isRecording && elapsedTime >= 120 && !isFinishingRef.current) {
+    if (timerActive && (Number.isFinite(remainingTime) ? remainingTime : 120) <= 0 && !isFinishingRef.current) {
       isFinishingRef.current = true;
       handleFinishAnswer();
     }
-  }, [elapsedTime, isRecording]);
+  }, [remainingTime, timerActive]);
 
   useEffect(() => {
     if (!isRecording) return;
@@ -103,6 +107,7 @@ export function InterviewSession() {
     if (isRecording || isSubmitting) return;
 
     setElapsedTime(0);
+    setRemainingTime(120);
 
     const beginRecording = async () => {
       try {
@@ -117,10 +122,12 @@ export function InterviewSession() {
         recorderRef.current = recorder;
         recorder.start();
         setIsRecording(true);
+        setTimerActive(true);
         setMicError(null);
       } catch {
         setMicError('마이크 권한이 필요합니다. 브라우저 설정에서 허용해 주세요.');
         setIsRecording(true);
+        setTimerActive(true);
       }
     };
 
@@ -180,6 +187,7 @@ export function InterviewSession() {
     setIsSubmitting(true);
 
     setIsRecording(false);
+    setTimerActive(false);
 
     const seconds = Math.min(elapsedTime, 120);
 
@@ -215,7 +223,8 @@ export function InterviewSession() {
     setIsSubmitting(false);
   };
 
-  const progressPercent = Math.max(0, Math.round(((120 - elapsedTime) / 120) * 100));
+  const safeRemaining = Number.isFinite(remainingTime) ? remainingTime : 120;
+  const progressPercent = Math.max(0, Math.round((safeRemaining / 120) * 100));
 
   if (!currentQuestion) {
     return (

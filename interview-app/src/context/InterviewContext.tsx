@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
+﻿import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { InterviewState, InterviewSettings, Question, Company, Report } from '../types';
 
 interface InterviewContextType extends InterviewState {
@@ -9,7 +9,7 @@ interface InterviewContextType extends InterviewState {
   companies: Company[];
   report: Report | null;
   setCurrentQuestionIndex: (index: number) => void;
-  setRemainingTime: (time: number) => void;
+  setRemainingTime: (time: number | ((prev: number) => number)) => void;
   setIsRecording: (recording: boolean) => void;
   setSelectedCompany: (companyId: string) => void;
   setSelectedJob: (jobId: string) => void;
@@ -91,9 +91,13 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, currentQuestionIndex: index }));
   };
 
-  const setRemainingTime = (time: number) => {
+  const setRemainingTime = useCallback((time: number | ((prev: number) => number)) => {
+    if (typeof time === 'function') {
+      setState(prev => ({ ...prev, remainingTime: time(prev.remainingTime ?? 120) }));
+      return;
+    }
     setState(prev => ({ ...prev, remainingTime: time }));
-  };
+  }, []);
 
   const setIsRecording = (recording: boolean) => {
     setState(prev => ({ ...prev, isRecording: recording }));
@@ -123,13 +127,13 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, settings }));
   };
 
-  const setElapsedTime = (time: number | ((prev: number) => number)) => {
+  const setElapsedTime = useCallback((time: number | ((prev: number) => number)) => {
     if (typeof time === 'function') {
       setElapsedTimeState(prev => time(prev));
       return;
     }
     setElapsedTimeState(time);
-  };
+  }, []);
 
   const setVoiceVolume = (volume: number[]) => {
     setVoiceVolumeState(volume);
