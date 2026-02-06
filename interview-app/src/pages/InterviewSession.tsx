@@ -41,6 +41,7 @@ export function InterviewSession() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
   const [timerActive, setTimerActive] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
   const interviewerImage = (() => {
@@ -60,7 +61,6 @@ export function InterviewSession() {
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // ✅ Web Audio API 분석을 위한 Ref 추가
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
@@ -71,7 +71,6 @@ export function InterviewSession() {
     }
   }, [currentQuestionIndex, questions.length, fetchNextQuestion]);
 
-  // ✅ [수정 1] 타이머 멈춤 해결: 의존성 배열에서 set 함수들 제거
   useEffect(() => {
     if (!timerActive) return;
 
@@ -81,7 +80,7 @@ export function InterviewSession() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timerActive]); // timerActive가 바뀔 때만 interval 설정
+  }, [timerActive]);
 
   useEffect(() => {
     const safeRemaining = Number.isFinite(remainingTime) ? remainingTime : 120;
@@ -97,23 +96,19 @@ export function InterviewSession() {
     }
   }, [remainingTime, timerActive]);
 
-  // ✅ [수정 2 & 3] Web Audio API 통합 및 목소리 반응형 애니메이션 (Noise Gate)
   useEffect(() => {
     if (!isRecording || !streamRef.current) return;
 
-    // AudioContext 초기화 (브라우저 정책 대응)
     if (!audioContextRef.current) {
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       audioContextRef.current = new AudioContextClass();
     }
     const audioCtx = audioContextRef.current;
 
-    // 분석기(Analyser) 설정
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
     analyserRef.current = analyser;
 
-    // 스트림 소스 연결
     if (sourceRef.current) sourceRef.current.disconnect();
     const source = audioCtx.createMediaStreamSource(streamRef.current);
     source.connect(analyser);
@@ -126,22 +121,19 @@ export function InterviewSession() {
       if (!analyserRef.current) return;
       analyserRef.current.getByteFrequencyData(dataArray);
 
-      // 평균 음량 계산
       let sum = 0;
       for (let i = 0; i < bufferLength; i++) {
         sum += dataArray[i];
       }
       const average = sum / bufferLength;
 
-      // 🎯 Noise Gate 로직: 평균 음량이 10보다 클 때만 랜덤 애니메이션 실행
       if (average > 10) {
         const newVolume = Array.from({ length: 5 }, () => Math.floor(Math.random() * 80) + 20);
         setVoiceVolume(newVolume);
       } else {
-        // 소리가 기준치 미만이면 5% 높이로 고정 (정지 상태)
         setVoiceVolume([5, 5, 5, 5, 5]);
       }
-    }, 150); // 반응 속도 최적화
+    }, 150);
 
     return () => {
       clearInterval(volumeInterval);
@@ -151,7 +143,6 @@ export function InterviewSession() {
 
   useEffect(() => {
     const avg = voiceVolume.reduce((acc, cur) => acc + cur, 0) / voiceVolume.length;
-    // 소리가 없을 땐 라벨 업데이트 생략
     if (avg <= 5) return; 
 
     if (avg < 35) setSpeedLabel('느림');
@@ -172,7 +163,6 @@ export function InterviewSession() {
           streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
         }
 
-        // 브라우저 보안 정책에 따라 오디오 컨텍스트 재개
         if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
           await audioContextRef.current.resume();
         }
@@ -197,15 +187,18 @@ export function InterviewSession() {
     try {
       const url = await speakQuestion(currentQuestion.id);
       if (url) {
+        setIsSpeaking(true);
         if (audioRef.current) {
           audioRef.current.pause();
           URL.revokeObjectURL(audioRef.current.src);
         }
         audioRef.current = new Audio(url);
         audioRef.current.onended = () => {
+          setIsSpeaking(false);
           beginRecording().catch(() => undefined);
         };
         audioRef.current.play().catch(() => {
+          setIsSpeaking(false);
           beginRecording().catch(() => undefined);
         });
       } else {
@@ -214,6 +207,7 @@ export function InterviewSession() {
       setTtsError(null);
       setShowQuestionText(false);
     } catch {
+      setIsSpeaking(false);
       setTtsError('질문 음성을 불러오지 못했습니다. 텍스트를 표시합니다.');
       setShowQuestionText(true);
       await beginRecording();
@@ -223,6 +217,7 @@ export function InterviewSession() {
   useEffect(() => {
     if (!currentQuestion || !sessionId) return;
     isFinishingRef.current = false;
+    setIsSpeaking(true);
     startRecording();
 
     return () => {
@@ -241,7 +236,6 @@ export function InterviewSession() {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
-      // AudioContext 자원 정리
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
@@ -300,10 +294,19 @@ export function InterviewSession() {
     );
   }
 
+  const statusText = isSubmitting
+    ? '답변 전송 중'
+    : isSpeaking
+      ? '질문 재생 중'
+      : isRecording
+        ? '답변 녹음 중'
+        : '대기 중';
+
   return (
     <section className={styles.page}>
       <div className={styles.container}>
         <div className={styles.videoSection}>
+          <div className={styles.statusBanner}>{statusText}</div>
           <div className={styles.videoBackground}>
             <div className={styles.videoBackgroundInner}>
               <img
@@ -388,24 +391,18 @@ export function InterviewSession() {
 
             <div className={styles.finishSection}>
               <button
-                onClick={startRecording}
-                className={styles.startButton}
-                disabled={isRecording || isSubmitting}
+                className={`${styles.statusButton} ${isSpeaking ? styles.statusSpeaking : isRecording ? styles.statusRecording : styles.statusIdle}`}
+                disabled
               >
-                <i className="fa-solid fa-play" />
+                {isSpeaking ? '질문 재생 중' : isRecording ? '녹음 중' : '대기 중'}
               </button>
               <button
                 onClick={handleFinishAnswer}
                 className={styles.finishButton}
                 disabled={isSubmitting}
               >
-                <i className="fa-solid fa-stop" />
+                {isLastQuestion ? '면접 종료' : '다음 질문'}
               </button>
-              <div className={styles.finishLabel}>
-                <span className={styles.finishLabelText}>
-                  {isSubmitting ? '전송 중...' : 'Start / Finish'}
-                </span>
-              </div>
             </div>
           </div>
 

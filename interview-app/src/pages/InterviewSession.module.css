@@ -1,4 +1,4 @@
-/* Interview Session Page Styles */
+﻿/* Interview Session Page Styles */
 
 .page {
   width: 100%;
@@ -19,8 +19,6 @@
   flex: 1;
 }
 
-/* ─── 메인 비디오 영역 ─── */
-
 .videoSection {
   position: relative;
   width: 100%;
@@ -31,6 +29,25 @@
   margin-bottom: 3rem;
   border: 1px solid #fff;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.statusBanner {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  padding: 0.65rem 1.25rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .videoBackground {
@@ -48,8 +65,6 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* ✅ 가로는 가운데(center), 세로는 위에서 100px 지점부터 보이도록 */
-  object-position: center 0; 
 }
 
 .videoOverlay {
@@ -58,7 +73,6 @@
   background: linear-gradient(to top, rgba(15, 23, 42, 0.6), transparent, transparent);
 }
 
-/* 좌측 상단 배지 */
 .topLeftBadges {
   position: absolute;
   top: 2rem;
@@ -124,7 +138,6 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
-/* 우측 상단 배지 */
 .topRightBadge {
   position: absolute;
   top: 2rem;
@@ -150,7 +163,6 @@
   color: #3b82f6;
 }
 
-/* 하단 질문 카드 */
 .questionCardArea {
   position: absolute;
   bottom: 3rem;
@@ -182,7 +194,6 @@
   line-height: 1.4;
 }
 
-/* 리스닝 인디케이터 */
 .listeningIndicator {
   margin-top: 1.5rem;
   display: flex;
@@ -239,8 +250,6 @@
   color: #dc2626;
 }
 
-/* ─── 하단 컨트롤 영역 ─── */
-
 .controlsGrid {
   width: 100%;
   max-width: 56rem;
@@ -249,7 +258,6 @@
   gap: 2rem;
 }
 
-/* 왼쪽 컨트롤 패널 (col-span-8) */
 .controlPanel {
   grid-column: span 8 / span 8;
   background: #fff;
@@ -335,7 +343,6 @@
   background: #bfdbfe;
 }
 
-/* 완료 버튼 */
 .finishSection {
   display: flex;
   align-items: center;
@@ -343,43 +350,41 @@
   flex: 0 0 auto;
 }
 
-.startButton {
-  width: 4.5rem;
-  height: 4.5rem;
-  background: #10b981;
-  color: #fff;
-  border: none;
+.statusButton {
+  min-width: 150px;
+  height: 3.25rem;
   border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.15s ease;
+  border: 1px solid transparent;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 0 1.25rem;
+  cursor: default;
 }
 
-.startButton:hover {
-  transform: scale(1.05);
+.statusIdle {
+  background: #e2e8f0;
+  color: #64748b;
 }
 
-.startButton:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.statusSpeaking {
+  background: #bfdbfe;
+  color: #1d4ed8;
+}
+
+.statusRecording {
+  background: #bbf7d0;
+  color: #166534;
 }
 
 .finishButton {
-  width: 5rem;
-  height: 5rem;
+  min-width: 150px;
+  height: 3.25rem;
   background: #ef4444;
   color: #fff;
   border: none;
   border-radius: 9999px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1), 0 4px 14px -2px #fee2e2;
   transition: transform 0.15s ease;
@@ -466,7 +471,6 @@
   margin-bottom: 0.5rem;
 }
 
-/* 오른쪽 가이드 패널 (col-span-4) */
 .guidePanel {
   grid-column: span 4 / span 4;
   background: #2563eb;
@@ -514,7 +518,6 @@
   line-height: 1.4;
 }
 
-/* 로딩 */
 .loadingScreen {
   width: 100%;
   min-height: 100vh;
@@ -528,8 +531,6 @@
   font-size: 1.25rem;
   color: #64748b;
 }
-
-/* ─── 반응형 ─── */
 
 @media (max-width: 1280px) {
   .page {
@@ -615,6 +616,7 @@
   .finishSection {
     width: 100%;
     justify-content: center;
+    flex-wrap: wrap;
   }
 
   .guidePanel {
