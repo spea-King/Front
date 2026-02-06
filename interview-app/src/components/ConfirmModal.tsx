@@ -17,7 +17,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h2>메인으로 이동할까요?</h2>
+        <h2>홈으로 이동할까요?</h2>
         <p>진행 중인 면접은 저장되지 않습니다.</p>
 
         <div className={styles.buttons}>
