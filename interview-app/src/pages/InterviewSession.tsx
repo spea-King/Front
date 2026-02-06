@@ -47,11 +47,17 @@ export function InterviewSession() {
       ? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80'
       : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
   })();
+
   const isFinishingRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // ✅ Web Audio API 분석을 위한 Ref 추가
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
   useEffect(() => {
     if (currentQuestionIndex >= questions.length) {
@@ -59,6 +65,7 @@ export function InterviewSession() {
     }
   }, [currentQuestionIndex, questions.length, fetchNextQuestion]);
 
+  // ✅ [수정 1] 타이머 멈춤 해결: 의존성 배열에서 set 함수들 제거
   useEffect(() => {
     if (!timerActive) return;
 
@@ -68,7 +75,7 @@ export function InterviewSession() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [timerActive, setElapsedTime, setRemainingTime]);
+  }, [timerActive]); // timerActive가 바뀔 때만 interval 설정
 
   useEffect(() => {
     const safeRemaining = Number.isFinite(remainingTime) ? remainingTime : 120;
@@ -78,25 +85,69 @@ export function InterviewSession() {
       `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     );
 
-    if (timerActive && (Number.isFinite(remainingTime) ? remainingTime : 120) <= 0 && !isFinishingRef.current) {
+    if (timerActive && safeRemaining <= 0 && !isFinishingRef.current) {
       isFinishingRef.current = true;
       handleFinishAnswer();
     }
   }, [remainingTime, timerActive]);
 
+  // ✅ [수정 2 & 3] Web Audio API 통합 및 목소리 반응형 애니메이션 (Noise Gate)
   useEffect(() => {
-    if (!isRecording) return;
+    if (!isRecording || !streamRef.current) return;
+
+    // AudioContext 초기화 (브라우저 정책 대응)
+    if (!audioContextRef.current) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
+    }
+    const audioCtx = audioContextRef.current;
+
+    // 분석기(Analyser) 설정
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    analyserRef.current = analyser;
+
+    // 스트림 소스 연결
+    if (sourceRef.current) sourceRef.current.disconnect();
+    const source = audioCtx.createMediaStreamSource(streamRef.current);
+    source.connect(analyser);
+    sourceRef.current = source;
+
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
 
     const volumeInterval = setInterval(() => {
-      const newVolume = Array.from({ length: 5 }, () => Math.floor(Math.random() * 80) + 20);
-      setVoiceVolume(newVolume);
-    }, 200);
+      if (!analyserRef.current) return;
+      analyserRef.current.getByteFrequencyData(dataArray);
 
-    return () => clearInterval(volumeInterval);
+      // 평균 음량 계산
+      let sum = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        sum += dataArray[i];
+      }
+      const average = sum / bufferLength;
+
+      // 🎯 Noise Gate 로직: 평균 음량이 10보다 클 때만 랜덤 애니메이션 실행
+      if (average > 10) {
+        const newVolume = Array.from({ length: 5 }, () => Math.floor(Math.random() * 80) + 20);
+        setVoiceVolume(newVolume);
+      } else {
+        // 소리가 기준치 미만이면 5% 높이로 고정 (정지 상태)
+        setVoiceVolume([5, 5, 5, 5, 5]);
+      }
+    }, 150); // 반응 속도 최적화
+
+    return () => {
+      clearInterval(volumeInterval);
+      if (sourceRef.current) sourceRef.current.disconnect();
+    };
   }, [isRecording, setVoiceVolume]);
 
   useEffect(() => {
     const avg = voiceVolume.reduce((acc, cur) => acc + cur, 0) / voiceVolume.length;
+    // 소리가 없을 땐 라벨 업데이트 생략
+    if (avg <= 5) return; 
+
     if (avg < 35) setSpeedLabel('느림');
     else if (avg < 60) setSpeedLabel('적정');
     else setSpeedLabel('빠름');
@@ -114,6 +165,12 @@ export function InterviewSession() {
         if (!streamRef.current) {
           streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
         }
+
+        // 브라우저 보안 정책에 따라 오디오 컨텍스트 재개
+        if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+          await audioContextRef.current.resume();
+        }
+
         const recorder = new MediaRecorder(streamRef.current);
         chunksRef.current = [];
         recorder.ondataavailable = (e) => {
@@ -145,6 +202,8 @@ export function InterviewSession() {
         audioRef.current.play().catch(() => {
           beginRecording().catch(() => undefined);
         });
+      } else {
+        await beginRecording();
       }
       setTtsError(null);
       setShowQuestionText(false);
@@ -158,8 +217,6 @@ export function InterviewSession() {
   useEffect(() => {
     if (!currentQuestion || !sessionId) return;
     isFinishingRef.current = false;
-    setElapsedTime(0);
-
     startRecording();
 
     return () => {
@@ -178,20 +235,23 @@ export function InterviewSession() {
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
       }
+      // AudioContext 자원 정리
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
     };
   }, []);
 
   const handleFinishAnswer = async () => {
-    if (!currentQuestion) return;
-    if (isSubmitting) return;
+    if (!currentQuestion || isSubmitting) return;
     setIsSubmitting(true);
 
     setIsRecording(false);
     setTimerActive(false);
 
     const seconds = Math.min(elapsedTime, 120);
-
     const recorder = recorderRef.current;
+
     if (recorder && recorder.state !== 'inactive') {
       await new Promise<void>((resolve) => {
         recorder.onstop = async () => {
@@ -274,12 +334,8 @@ export function InterviewSession() {
               <p className={styles.questionText}>
                 {showQuestionText ? `"${currentQuestion.text}"` : '"질문은 음성으로 제공됩니다."'}
               </p>
-              {ttsError && (
-                <p className={`${styles.statusMessage} ${styles.statusError}`}>{ttsError}</p>
-              )}
-              {micError && (
-                <p className={`${styles.statusMessage} ${styles.statusError}`}>{micError}</p>
-              )}
+              {ttsError && <p className={`${styles.statusMessage} ${styles.statusError}`}>{ttsError}</p>}
+              {micError && <p className={`${styles.statusMessage} ${styles.statusError}`}>{micError}</p>}
               {isRecording && (
                 <div className={styles.listeningIndicator}>
                   <div className={styles.audioWave}>
@@ -288,9 +344,7 @@ export function InterviewSession() {
                     <div className={styles.audioBar} />
                     <div className={styles.audioBar} />
                   </div>
-                  <span className={styles.listeningText}>
-                    답변 녹음 중입니다
-                  </span>
+                  <span className={styles.listeningText}>답변 녹음 중입니다</span>
                 </div>
               )}
             </div>
@@ -354,16 +408,12 @@ export function InterviewSession() {
             <ul className={styles.guideList}>
               <li className={styles.guideItem}>
                 <i className={`fa-solid fa-circle-check ${styles.guideCheckIcon}`} />
-                <span className={styles.guideText}>
-                  STAR 기법으로 상황, 과제, 행동, 결과를 명확히 말해 주세요.
-                </span>
+                <span className={styles.guideText}>STAR 기법으로 상황, 과제, 행동, 결과를 명확히 말해 주세요.</span>
               </li>
               <li className={styles.guideItem}>
                 <i className={`fa-solid fa-circle-check ${styles.guideCheckIcon}`} />
                 <span className={styles.guideText}>
-                  {settings.style === 'pressure'
-                    ? '근거와 수치를 중심으로 짧게 답해 주세요.'
-                    : '기술적 포인트를 구체적으로 보여 주세요.'}
+                  {settings.style === 'pressure' ? '근거와 수치를 중심으로 짧게 답해 주세요.' : '기술적 포인트를 구체적으로 보여 주세요.'}
                 </span>
               </li>
             </ul>
