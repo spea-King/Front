@@ -26,7 +26,7 @@ export function InterviewSession() {
     speakQuestion
   } = useInterview();
 
-  const [formattedTime, setFormattedTime] = useState('00:00');
+  const [formattedTime, setFormattedTime] = useState('02:00');
   const [micError, setMicError] = useState<string | null>(null);
   const [ttsError, setTtsError] = useState<string | null>(null);
   const [showQuestionText, setShowQuestionText] = useState(false);
@@ -61,8 +61,9 @@ export function InterviewSession() {
   }, [isRecording, setElapsedTime]);
 
   useEffect(() => {
-    const minutes = Math.floor(elapsedTime / 60);
-    const seconds = elapsedTime % 60;
+    const remaining = Math.max(0, 120 - elapsedTime);
+    const minutes = Math.floor(remaining / 60);
+    const seconds = remaining % 60;
     setFormattedTime(
       `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     );
@@ -96,6 +97,27 @@ export function InterviewSession() {
     if (isRecording || isSubmitting) return;
 
     setElapsedTime(0);
+
+    const beginRecording = async () => {
+      try {
+        if (!streamRef.current) {
+          streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+        const recorder = new MediaRecorder(streamRef.current);
+        chunksRef.current = [];
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunksRef.current.push(e.data);
+        };
+        recorderRef.current = recorder;
+        recorder.start();
+        setIsRecording(true);
+        setMicError(null);
+      } catch {
+        setMicError('마이크 권한이 필요합니다. 브라우저 설정에서 허용해 주세요.');
+        setIsRecording(true);
+      }
+    };
+
     try {
       const url = await speakQuestion(currentQuestion.id);
       if (url) {
@@ -104,6 +126,9 @@ export function InterviewSession() {
           URL.revokeObjectURL(audioRef.current.src);
         }
         audioRef.current = new Audio(url);
+        audioRef.current.onended = () => {
+          beginRecording().catch(() => undefined);
+        };
         audioRef.current.play().catch(() => undefined);
       }
       setTtsError(null);
@@ -111,24 +136,7 @@ export function InterviewSession() {
     } catch {
       setTtsError('질문 음성을 불러오지 못했습니다. 텍스트를 표시합니다.');
       setShowQuestionText(true);
-    }
-
-    try {
-      if (!streamRef.current) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-      }
-      const recorder = new MediaRecorder(streamRef.current);
-      chunksRef.current = [];
-      recorder.ondataavailable = (e) => {
-        if (e.data.size > 0) chunksRef.current.push(e.data);
-      };
-      recorderRef.current = recorder;
-      recorder.start();
-      setIsRecording(true);
-      setMicError(null);
-    } catch {
-      setMicError('마이크 권한이 필요합니다. 브라우저 설정에서 허용해 주세요.');
-      setIsRecording(true);
+      await beginRecording();
     }
   };
 
@@ -199,7 +207,7 @@ export function InterviewSession() {
     setIsSubmitting(false);
   };
 
-  const progressPercent = Math.min(100, Math.round((elapsedTime / 120) * 100));
+  const progressPercent = Math.max(0, Math.round(((120 - elapsedTime) / 120) * 100));
 
   if (!currentQuestion) {
     return (
@@ -264,7 +272,7 @@ export function InterviewSession() {
                     <div className={styles.audioBar} />
                   </div>
                   <span className={styles.listeningText}>
-                    AI Interviewer Listening...
+                    답변 녹음 중입니다
                   </span>
                 </div>
               )}
@@ -276,7 +284,7 @@ export function InterviewSession() {
           <div className={styles.controlPanel}>
             <div className={styles.controlInfo}>
               <div className={styles.infoColumn}>
-                <span className={styles.infoLabel}>Elapsed Time</span>
+                <span className={styles.infoLabel}>남은 시간</span>
                 <span className={styles.timerValue}>{formattedTime}</span>
               </div>
               <div className={styles.divider} />

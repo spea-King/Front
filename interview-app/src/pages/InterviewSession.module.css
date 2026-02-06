@@ -258,17 +258,21 @@
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .controlInfo {
   display: flex;
   align-items: center;
   gap: 2rem;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
 }
 
 .infoColumn {
   display: flex;
   flex-direction: column;
+  min-width: 140px;
 }
 
 .infoLabel {
@@ -301,7 +305,7 @@
 }
 
 .progressBar {
-  width: 160px;
+  width: 200px;
   height: 10px;
   background: #e2e8f0;
   border-radius: 9999px;
@@ -334,6 +338,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex: 0 0 auto;
 }
 
 .startButton {
