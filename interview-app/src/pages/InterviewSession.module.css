@@ -48,6 +48,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* ✅ 가로는 가운데(center), 세로는 위에서 100px 지점부터 보이도록 */
+  object-position: center 0; 
 }
 
 .videoOverlay {

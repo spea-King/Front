@@ -8,41 +8,29 @@ import { InterviewSession } from './pages/InterviewSession';
 import { InterviewComplete } from './pages/InterviewComplete';
 import { InterviewReport } from './pages/InterviewReport';
 
+import styles from './App.module.css';
+
 function HomeButton() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 현재 페이지가 랜딩 페이지('/')라면 버튼을 숨깁니다.
   if (location.pathname === '/') return null;
 
-  const buttonStyle: React.CSSProperties = {
-    position: 'fixed',
-    top: '20px',
-    left: '20px',
-    zIndex: 9999,
-    padding: '10px 15px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    border: '1px solid #ddd',
-    borderRadius: '50px',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-    fontSize: '14px',
-    fontWeight: '600',
-    color: '#333',
+  // 면접 중일 때는 한 번 물어보는 로직 추가 (선택 사항)
+  const handleHomeClick = () => {
+    if (location.pathname === '/interview') {
+      if (window.confirm("메인으로 돌아가시겠습니까? 진행 중인 면접은 저장되지 않습니다.")) {
+        navigate('/');
+      }
+    } else {
+      navigate('/');
+    }
   };
 
   return (
-    <button 
-      onClick={() => navigate('/')} 
-      style={buttonStyle}
-      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f8f9fa')}
-      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)')}
-    >
-      <i className="fa-solid fa-house"></i>
-      홈으로
+    <button className={styles.homeButton} onClick={handleHomeClick}>
+      <i className={`fa-solid fa-house ${styles.homeIcon}`}></i>
+      <span className={styles.buttonText}>홈으로</span>
     </button>
   );
 }

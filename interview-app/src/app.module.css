@@ -1,0 +1,69 @@
+.homeButton {
+  position: fixed;
+  /* 화면 너비에 따라 간격 조절 (최소 12px, 적정 1.5vw, 최대 24px) */
+  top: clamp(1.5rem, 3vw, 3rem);
+  left: clamp(3rem, 6vw, 6rem);
+  z-index: 9999;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 간격도 유동적으로 */
+  gap: 0.5rem;
+  
+  background-color: rgba(255, 255, 255, 0.95);
+  /* 주석 수정: CSS 문법 오류(괄호) 제거 */
+  border: 0.0625rem solid #e2e8f0; 
+  border-radius: 3.125rem; /* 충분히 큰 rem값으로 둥글게 유지 */
+  cursor: pointer;
+  
+  /* ✅ 수정됨: 블러 반경(세 번째 값)을 0.75rem -> 1.25rem으로 늘려 부드럽게 퍼지게 함 */
+  /* 수직 오프셋(두 번째 값)도 살짝 줄여서 버튼에 더 밀착된 느낌을 줌 */
+  box-shadow: 0 0.125rem 1.25rem rgba(0, 0, 0, 0.1);
+
+  transition: all 0.2s ease-in-out;
+  color: #334155;
+  font-weight: 600;
+
+  /* 패딩을 화면 너비(vw)에 연동하여 크기 가변화 */
+  padding: clamp(0.5rem, 0.8vw + 0.2rem, 0.8rem) clamp(1rem, 1.2vw + 0.5rem, 1.5rem);
+}
+
+.homeButton:hover {
+  background-color: #ffffff;
+  transform: translateY(-0.125rem);
+  
+  /* ✅ 수정됨: 호버 시 블러 반경을 1rem -> 2rem으로 크게 늘려 훨씬 은은하고 넓게 퍼지도록 함 */
+  box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.12);
+}
+
+.homeIcon {
+  /* 아이콘 크기도 화면에 따라 가변 */
+  font-size: clamp(0.9rem, 1vw + 0.2rem, 1.1rem);
+}
+
+.buttonText {
+  /* 폰트 크기도 화면에 따라 가변 */
+  font-size: clamp(0.8rem, 0.9vw + 0.1rem, 0.9rem);
+  white-space: nowrap;
+}
+
+/* 📱 모바일 및 아주 작은 화면 대응 */
+@media (max-width: 640px) {
+  .homeButton {
+    /* 모바일에서는 좀 더 콤팩트하게 */
+    padding: 0.7rem;
+    gap: 0;
+    
+    /* 모바일에서는 그림자를 조금 더 은은하게 조정 (선택사항) */
+    box-shadow: 0 0.125rem 1rem rgba(0, 0, 0, 0.08);
+  }
+
+  .buttonText {
+    display: none; /* 모바일은 아이콘만 남겨서 공간 확보 */
+  }
+
+  .homeIcon {
+    font-size: 1.125rem;
+  }
+}
