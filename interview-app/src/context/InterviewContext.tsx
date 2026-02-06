@@ -1,5 +1,6 @@
 ﻿import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { InterviewState, InterviewSettings, Question, Company, Report } from '../types';
+import tossLogo from '../assets/Toss_Symbol_Primary.png';
 
 interface InterviewContextType extends InterviewState {
   currentQuestion: Question | null;
@@ -36,6 +37,7 @@ const companiesSeed: Company[] = [
   {
     company_id: 'toss',
     name: 'TOSS',
+    logo: tossLogo,
     company_summary: '금융 플랫폼 기반의 핀테크 서비스 기업',
     talent_profile: ['문제 해결에 집요함', '고객 중심 사고', '빠른 실행'],
     culture_fit: ['수평적 커뮤니케이션', '자율과 책임', '실험과 개선'],
