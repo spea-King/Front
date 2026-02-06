@@ -7,15 +7,21 @@ import styles from './InterviewSettings.module.css';
 
 export function InterviewSettings() {
   const navigate = useNavigate();
-  const { setSettings, startSession } = useInterview();
+  const { setSettings, startSession, selectedCompany, selectedJob } = useInterview();
   const [localSettings, setLocalSettings] = useState<SettingsType>({
     questionCount: 5,
     voice: 'female',
     style: 'friendly'
   });
   const [isStarting, setIsStarting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleStart = async () => {
+    if (!selectedCompany || !selectedJob) {
+      setError('기업/직무 선택이 필요합니다.');
+      navigate('/company-job');
+      return;
+    }
     setSettings(localSettings);
     setIsStarting(true);
     try {
@@ -39,6 +45,9 @@ export function InterviewSettings() {
         </div>
 
         <div>
+          {error && (
+            <div className={styles.errorNotice}>{error}</div>
+          )}
           <div className={styles.settingsSection}>
             <div className={styles.settingGroup}>
               <div className={styles.settingLabel}>

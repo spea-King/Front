@@ -67,6 +67,17 @@
   animation: slideDown 0.6s ease-out 0.2s both;
 }
 
+.errorNotice {
+  margin: 0 auto 1.5rem;
+  max-width: 720px;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: #fee2e2;
+  color: #b91c1c;
+  font-weight: 700;
+  text-align: center;
+}
+
 .settingsSection {
   background: white;
   border-radius: 16px;
