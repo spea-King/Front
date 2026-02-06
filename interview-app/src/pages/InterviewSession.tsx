@@ -34,10 +34,16 @@ export function InterviewSession() {
   const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
 
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
-  const interviewerImage =
-    settings.voice === 'male'
+  const interviewerImage = (() => {
+    if (settings.style === 'pressure') {
+      return settings.voice === 'male'
+        ? 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80'
+        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80';
+    }
+    return settings.voice === 'male'
       ? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80'
       : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
+  })();
   const isFinishingRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -129,7 +135,9 @@ export function InterviewSession() {
         audioRef.current.onended = () => {
           beginRecording().catch(() => undefined);
         };
-        audioRef.current.play().catch(() => undefined);
+        audioRef.current.play().catch(() => {
+          beginRecording().catch(() => undefined);
+        });
       }
       setTtsError(null);
       setShowQuestionText(false);
