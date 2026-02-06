@@ -1,6 +1,8 @@
 ﻿import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { InterviewState, InterviewSettings, Question, Company, Report } from '../types';
 import tossLogo from '../assets/Toss_Symbol_Primary.png';
+import googleLogo from '../assets/google-color.svg';
+import kakaoLogo from '../assets/kakao.png';
 
 interface InterviewContextType extends InterviewState {
   currentQuestion: Question | null;
@@ -34,6 +36,24 @@ interface InterviewContextType extends InterviewState {
 const InterviewContext = createContext<InterviewContextType | undefined>(undefined);
 
 const companiesSeed: Company[] = [
+  {
+    company_id: 'kakao',
+    name: 'Kakao',
+    logo: kakaoLogo,
+    company_summary: '모바일 플랫폼 기반의 IT 서비스 기업',
+    talent_profile: ['주도성', '협업', '문제해결'],
+    culture_fit: ['수평적 커뮤니케이션', '빠른 실행', '실험 문화'],
+    jobs: []
+  },
+  {
+    company_id: 'google',
+    name: 'Google',
+    logo: googleLogo,
+    company_summary: '글로벌 기술 기업으로 검색, 클라우드, AI 기반 서비스를 제공',
+    talent_profile: ['문제 해결', '데이터 기반 사고', '기술적 깊이'],
+    culture_fit: ['개방적 협업', '실험과 학습', '임팩트 중심'],
+    jobs: []
+  },
   {
     company_id: 'toss',
     name: 'TOSS',
