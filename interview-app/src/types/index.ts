@@ -1,4 +1,4 @@
-export interface Job {
+﻿export interface Job {
   job_id: string;
   title: string;
   active: boolean;
@@ -15,27 +15,38 @@ export interface Company {
 }
 
 export interface Question {
-  id: number;
-  question: string;
+  id: string;
+  text: string;
   timeLimit: number;
 }
 
-export interface QuestionReport {
-  id: number;
-  question: string;
-  duration: number;
-  myAnswer: string;
-  aiSuggestion: string;
-  feedback: string;
+export interface ReportAnswer {
+  question_id: string;
+  question_text: string;
+  answer_seconds: number;
+  words_per_min: number;
+  wpm_label: string;
+  transcript?: string | null;
+  model_answer?: string | null;
+  feedback?: string | null;
+}
+
+export interface ReportSummary {
+  average_seconds: number;
+  min_seconds: number;
+  max_seconds: number;
+  std_dev_seconds: number;
+  average_wpm: number;
+  average_wpm_label: string;
+  summary_lines: string[];
 }
 
 export interface Report {
-  summary: {
-    averageTime: number;
-    speakingSpeed: string;
-    threeLineSummary: string[];
-  };
-  questions: QuestionReport[];
+  session_id: string;
+  total_questions: number;
+  answered_questions: number;
+  summary: ReportSummary;
+  answers: ReportAnswer[];
 }
 
 export interface InterviewSettings {
@@ -45,12 +56,14 @@ export interface InterviewSettings {
 }
 
 export interface InterviewState {
+  sessionId: string | null;
   currentQuestionIndex: number;
   remainingTime: number;
   isRecording: boolean;
-  answers: string[];
   selectedCompany: string | null;
   selectedJob: string | null;
   resumeFile: File | null;
+  resumeText: string | null;
+  selfIntroText: string | null;
   settings: InterviewSettings;
 }

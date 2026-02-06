@@ -1,17 +1,16 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, Check, ChevronRight } from 'lucide-react';
 import { useInterview } from '../context/InterviewContext';
-import { mockCompanies } from '../data/mockData';
 import styles from './CompanyJobSelect.module.css';
 
 export function CompanyJobSelect() {
   const navigate = useNavigate();
-  const { setSelectedCompany, setSelectedJob } = useInterview();
+  const { setSelectedCompany, setSelectedJob, companies } = useInterview();
   const [localCompany, setLocalCompany] = useState<string | null>(null);
   const [localJob, setLocalJob] = useState<string | null>(null);
 
-  const selectedCompanyData = mockCompanies.find(c => c.company_id === localCompany);
+  const selectedCompanyData = companies.find(c => c.company_id === localCompany);
 
   const handleNext = () => {
     if (localCompany && localJob) {
@@ -24,34 +23,26 @@ export function CompanyJobSelect() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <div className={styles.header}>
           <div className={styles.badge}>
             <Building2 className={styles.badgeIcon} />
-            <span className={styles.badgeText}>
-              Step 1 of 4
-            </span>
+            <span className={styles.badgeText}>Step 1 of 4</span>
           </div>
-          <h1 className={styles.title}>
-            기업 & 직무 선택
-          </h1>
-          <p className={styles.description}>
-            면접을 준비할 기업과 직무를 선택해주세요
-          </p>
+          <h1 className={styles.title}>기업 & 직무 선택</h1>
+          <p className={styles.description}>면접을 준비할 기업과 직무를 선택해 주세요</p>
         </div>
 
         <div>
-          {/* Company Selection */}
           <div className={styles.section}>
             <h2 className={styles.sectionTitle}>기업 선택</h2>
 
             <div>
-              {mockCompanies.map((company) => (
+              {companies.map((company) => (
                 <button
                   key={company.company_id}
                   onClick={() => {
                     setLocalCompany(company.company_id);
-                    setLocalJob(null); // Reset job when company changes
+                    setLocalJob(null);
                   }}
                   className={`${styles.companyCard} ${
                     localCompany === company.company_id ? styles.selected : ''
@@ -80,7 +71,6 @@ export function CompanyJobSelect() {
             </div>
           </div>
 
-          {/* Job Selection */}
           {selectedCompanyData && (
             <div className={styles.section}>
               <h2 className={styles.sectionTitle}>직무 선택</h2>
@@ -97,13 +87,9 @@ export function CompanyJobSelect() {
                   >
                     <div className={styles.jobHeader}>
                       <h3 className={styles.jobTitle}>{job.title}</h3>
-                      {localJob === job.job_id && (
-                        <Check className={styles.checkIcon} />
-                      )}
+                      {localJob === job.job_id && <Check className={styles.checkIcon} />}
                       {!job.active && (
-                        <span className={styles.disabledBadge}>
-                          준비중
-                        </span>
+                        <span className={styles.disabledBadge}>준비중</span>
                       )}
                     </div>
 
@@ -121,7 +107,6 @@ export function CompanyJobSelect() {
             </div>
           )}
 
-          {/* Next Button */}
           <div className={styles.navigation}>
             <button
               onClick={handleNext}

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+﻿import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FileText, X, Shield, FileSignature, IdCard } from 'lucide-react';
 import { useInterview } from '../context/InterviewContext';
@@ -8,13 +8,14 @@ type FileType = 'portfolio' | 'resume';
 
 export function ResumeUpload() {
   const navigate = useNavigate();
-  const { setResumeFile } = useInterview();
+  const { setResumeFile, setResumeText, setSelfIntroText, parseDoc } = useInterview();
   const [portfolioFile, setPortfolioFile] = useState<File | null>(null);
   const [localResumeFile, setLocalResumeFile] = useState<File | null>(null);
   const [isDraggingPortfolio, setIsDraggingPortfolio] = useState(false);
   const [isDraggingResume, setIsDraggingResume] = useState(false);
   const [portfolioError, setPortfolioError] = useState<string>('');
   const [resumeError, setResumeError] = useState<string>('');
+  const [isParsing, setIsParsing] = useState(false);
   const portfolioInputRef = useRef<HTMLInputElement>(null);
   const resumeInputRef = useRef<HTMLInputElement>(null);
 
@@ -34,7 +35,7 @@ export function ResumeUpload() {
 
     if (file.size > maxSize) {
       const maxSizeMB = type === 'portfolio' ? 20 : 10;
-      setError(`파일 크기는 ${maxSizeMB}MB 이하여야 합니다`);
+      setError(`파일 크기는 ${maxSizeMB}MB 이하이어야 합니다`);
       return false;
     }
 
@@ -107,18 +108,30 @@ export function ResumeUpload() {
     }
   };
 
-  const handleNext = () => {
-    if (localResumeFile || portfolioFile) {
-      // Context에 파일 저장 (이력서 우선)
-      setResumeFile(localResumeFile || portfolioFile);
+  const handleNext = async () => {
+    if (!localResumeFile && !portfolioFile) return;
+
+    setIsParsing(true);
+    try {
+      if (localResumeFile) {
+        const text = await parseDoc(localResumeFile);
+        setResumeText(text);
+        setResumeFile(localResumeFile);
+      }
+      if (portfolioFile) {
+        const text = await parseDoc(portfolioFile);
+        setSelfIntroText(text);
+      }
       navigate('/interview-settings');
+    } finally {
+      setIsParsing(false);
     }
   };
 
   const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
 
   const renderUploadArea = (
@@ -194,26 +207,19 @@ export function ResumeUpload() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <div className={styles.header}>
           <div className={styles.badge}>
             <FileText className={styles.badgeIcon} />
-            <span className={styles.badgeText}>
-              Step 2 of 4
-            </span>
+            <span className={styles.badgeText}>Step 2 of 4</span>
           </div>
-          <h1 className={styles.title}>
-            지원 정보 분석
-          </h1>
+          <h1 className={styles.title}>지원자 정보 입력</h1>
           <p className={styles.description}>
-            이력서와 자기소개서를 분석하여 기업 맞춤형 예상 질문을 추출합니다.
+            이력서/자소서를 분석해 맞춤 질문을 생성합니다.
           </p>
         </div>
 
         <div>
-          {/* Upload Areas */}
           <div className={styles.uploadSection}>
-            {/* Portfolio Upload (Left) */}
             {renderUploadArea(
               'portfolio',
               portfolioFile,
@@ -221,11 +227,10 @@ export function ResumeUpload() {
               portfolioError,
               portfolioInputRef,
               <FileSignature className={styles.coverLetterIcon} />,
-              '자기소개서',
-              'PDF, DOCX (최대 10MB)'
+              '자소서',
+              'PDF, 최대 20MB'
             )}
 
-            {/* Resume Upload (Right) */}
             {renderUploadArea(
               'resume',
               localResumeFile,
@@ -233,25 +238,23 @@ export function ResumeUpload() {
               resumeError,
               resumeInputRef,
               <IdCard className={styles.resumeIcon} />,
-              '이력서 / 포트폴리오',
-              'PDF 형식 권장 (최대 20MB)'
+              '이력서',
+              'PDF, 최대 10MB'
             )}
           </div>
 
-          {/* Security Notice */}
           <div className={styles.securityNote}>
             <Shield className={styles.securityIcon} />
-            <span>개인정보는 암호화되어 처리되며, 분석 완료 후 즉시 파기됩니다.</span>
+            <span>개인정보는 저장되지 않으며 분석 후 즉시 폐기됩니다.</span>
           </div>
 
-          {/* Navigation */}
           <div className={styles.navigation}>
             <button
               onClick={handleNext}
-              disabled={!localResumeFile && !portfolioFile}
+              disabled={(!localResumeFile && !portfolioFile) || isParsing}
               className={styles.nextButton}
             >
-              다음 단계로 이동
+              {isParsing ? '분석 중...' : '다음 단계로 이동'}
             </button>
           </div>
         </div>

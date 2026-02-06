@@ -1,4 +1,4 @@
-import { useState } from 'react';
+﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Settings, ChevronRight, User, Volume2, ChevronLeft, CheckCircle } from 'lucide-react';
 import { useInterview } from '../context/InterviewContext';
@@ -7,46 +7,45 @@ import styles from './InterviewSettings.module.css';
 
 export function InterviewSettings() {
   const navigate = useNavigate();
-  const { setSettings } = useInterview();
+  const { setSettings, startSession } = useInterview();
   const [localSettings, setLocalSettings] = useState<SettingsType>({
     questionCount: 5,
     voice: 'female',
     style: 'friendly'
   });
+  const [isStarting, setIsStarting] = useState(false);
 
-  const handleStart = () => {
+  const handleStart = async () => {
     setSettings(localSettings);
-    navigate('/interview');
+    setIsStarting(true);
+    try {
+      await startSession();
+      navigate('/interview');
+    } finally {
+      setIsStarting(false);
+    }
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        {/* Header */}
         <div className={styles.header}>
           <div className={styles.badge}>
             <Settings className={styles.badgeIcon} />
-            <span className={styles.badgeText}>
-              Step 3 of 4
-            </span>
+            <span className={styles.badgeText}>Step 3 of 4</span>
           </div>
-          <h1 className={styles.title}>
-            면접 설정
-          </h1>
-          <p className={styles.description}>
-            면접 환경을 설정해주세요
-          </p>
+          <h1 className={styles.title}>면접 설정</h1>
+          <p className={styles.description}>면접 환경을 설정해 주세요</p>
         </div>
 
         <div>
-          {/* Question Count */}
           <div className={styles.settingsSection}>
             <div className={styles.settingGroup}>
               <div className={styles.settingLabel}>
                 <User className={styles.settingIcon} />
                 면접 질문 수
               </div>
-              <p className={styles.settingDescription}>받고 싶은 질문의 개수를 선택하세요</p>
+              <p className={styles.settingDescription}>받고 싶은 질문의 개수를 선택해 주세요</p>
 
               <div className={styles.sliderContainer}>
                 <div className={styles.sliderValue}>{localSettings.questionCount}개</div>
@@ -70,13 +69,12 @@ export function InterviewSettings() {
               </div>
             </div>
 
-            {/* Voice Selection */}
             <div className={styles.settingGroup}>
               <div className={styles.settingLabel}>
                 <Volume2 className={styles.settingIcon} />
                 면접관 목소리
               </div>
-              <p className={styles.settingDescription}>선호하는 음성을 선택하세요</p>
+              <p className={styles.settingDescription}>선호하는 목소리를 선택해 주세요</p>
 
               <div className={styles.choiceGrid}>
                 <button
@@ -98,18 +96,17 @@ export function InterviewSettings() {
                 >
                   <span className={styles.choiceEmoji}>👩</span>
                   <div className={styles.choiceName}>여성</div>
-                  <p className={styles.choiceDescription}>부드럽고 친근한</p>
+                  <p className={styles.choiceDescription}>부드럽고 친절한</p>
                 </button>
               </div>
             </div>
 
-            {/* Interview Style */}
             <div className={styles.settingGroup}>
               <div className={styles.settingLabel}>
                 <Settings className={styles.settingIcon} />
                 면접 스타일
               </div>
-              <p className={styles.settingDescription}>연습하고 싶은 면접 분위기를 선택하세요</p>
+              <p className={styles.settingDescription}>연습할 면접 분위기를 선택해 주세요</p>
 
               <div className={styles.choiceGrid}>
                 <button
@@ -119,9 +116,9 @@ export function InterviewSettings() {
                   }`}
                 >
                   <span className={styles.choiceEmoji}>😊</span>
-                  <div className={styles.choiceName}>친절한</div>
+                  <div className={styles.choiceName}>친절</div>
                   <p className={styles.choiceDescription}>
-                    격려하고 편안한 분위기로 진행됩니다
+                    격려하고 편안한 분위기
                   </p>
                 </button>
 
@@ -134,14 +131,13 @@ export function InterviewSettings() {
                   <span className={styles.choiceEmoji}>😐</span>
                   <div className={styles.choiceName}>압박</div>
                   <p className={styles.choiceDescription}>
-                    긴장감 있는 실전과 유사한 분위기로 진행됩니다
+                    긴장감 있는 실전 분위기
                   </p>
                 </button>
               </div>
             </div>
           </div>
 
-          {/* Summary */}
           <div className={styles.summarySection}>
             <div className={styles.summaryTitle}>
               <CheckCircle className={styles.summaryIcon} />
@@ -153,7 +149,7 @@ export function InterviewSettings() {
                 <div className={styles.summaryItemValue}>{localSettings.questionCount}개</div>
               </div>
               <div className={styles.summaryItem}>
-                <div className={styles.summaryItemLabel}>면접관 음성</div>
+                <div className={styles.summaryItemLabel}>면접관 목소리</div>
                 <div className={styles.summaryItemValue}>
                   {localSettings.voice === 'male' ? '남성' : '여성'}
                 </div>
@@ -161,13 +157,12 @@ export function InterviewSettings() {
               <div className={styles.summaryItem}>
                 <div className={styles.summaryItemLabel}>면접 스타일</div>
                 <div className={styles.summaryItemValue}>
-                  {localSettings.style === 'friendly' ? '친절한' : '압박'}
+                  {localSettings.style === 'friendly' ? '친절' : '압박'}
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Navigation */}
           <div className={styles.navigation}>
             <button
               onClick={() => navigate('/resume-upload')}
@@ -180,11 +175,12 @@ export function InterviewSettings() {
             <button
               onClick={handleStart}
               className={styles.startButton}
+              disabled={isStarting}
             >
               <div className={styles.startButtonBg} />
               <div className={styles.startButtonShine} />
               <span className={styles.startButtonContent}>
-                면접 시작
+                {isStarting ? '시작 중...' : '면접 시작'}
                 <ChevronRight />
               </span>
             </button>

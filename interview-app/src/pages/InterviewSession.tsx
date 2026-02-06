@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInterview } from '../context/InterviewContext';
 import styles from './InterviewSession.module.css';
@@ -15,37 +15,54 @@ export function InterviewSession() {
     selectedCompany,
     selectedJob,
     settings,
+    sessionId,
     setElapsedTime,
     setIsRecording,
-    addAnswer,
     setCurrentQuestionIndex,
-    setVoiceVolume
+    setVoiceVolume,
+    fetchNextQuestion,
+    submitAnswerTime,
+    submitAnswerAudio,
+    speakQuestion
   } = useInterview();
 
   const [formattedTime, setFormattedTime] = useState('00:00');
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
+  const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
+  const isFinishingRef = useRef(false);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // 경과 시간 타이머
+  useEffect(() => {
+    if (currentQuestionIndex >= questions.length) {
+      fetchNextQuestion().catch(() => undefined);
+    }
+  }, [currentQuestionIndex, questions.length, fetchNextQuestion]);
+
   useEffect(() => {
     if (!isRecording) return;
 
     const interval = setInterval(() => {
-      setElapsedTime(elapsedTime + 1);
+      setElapsedTime(prev => prev + 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isRecording, elapsedTime, setElapsedTime]);
+  }, [isRecording, setElapsedTime]);
 
-  // 시간 포맷팅
   useEffect(() => {
     const minutes = Math.floor(elapsedTime / 60);
     const seconds = elapsedTime % 60;
     setFormattedTime(
       `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     );
-  }, [elapsedTime]);
 
-  // 음성 볼륨 시뮬레이션 (실제로는 마이크 입력을 사용)
+    if (isRecording && elapsedTime >= 120 && !isFinishingRef.current) {
+      isFinishingRef.current = true;
+      handleFinishAnswer();
+    }
+  }, [elapsedTime, isRecording]);
+
   useEffect(() => {
     if (!isRecording) return;
 
@@ -57,22 +74,99 @@ export function InterviewSession() {
     return () => clearInterval(volumeInterval);
   }, [isRecording, setVoiceVolume]);
 
-  // 녹음 자동 시작
   useEffect(() => {
-    if (currentQuestion && !isRecording) {
-      setTimeout(() => setIsRecording(true), 1000);
-    }
-  }, [currentQuestion]);
+    if (!currentQuestion || !sessionId) return;
+    isFinishingRef.current = false;
+    setElapsedTime(0);
 
-  const handleFinishAnswer = () => {
-    addAnswer(`답변 완료: Question ${currentQuestionIndex + 1}`);
+    const start = async () => {
+      try {
+        const url = await speakQuestion(currentQuestion.id);
+        if (url) {
+          if (audioRef.current) {
+            audioRef.current.pause();
+            URL.revokeObjectURL(audioRef.current.src);
+          }
+          audioRef.current = new Audio(url);
+          audioRef.current.play().catch(() => undefined);
+        }
+      } catch {
+        // ignore
+      }
+
+      try {
+        if (!streamRef.current) {
+          streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
+        const recorder = new MediaRecorder(streamRef.current);
+        chunksRef.current = [];
+        recorder.ondataavailable = (e) => {
+          if (e.data.size > 0) chunksRef.current.push(e.data);
+        };
+        recorderRef.current = recorder;
+        recorder.start();
+        setIsRecording(true);
+      } catch {
+        setIsRecording(true);
+      }
+    };
+
+    start();
+
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        URL.revokeObjectURL(audioRef.current.src);
+      }
+    };
+  }, [currentQuestion?.id]);
+
+  useEffect(() => {
+    return () => {
+      if (recorderRef.current && recorderRef.current.state !== 'inactive') {
+        recorderRef.current.stop();
+      }
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, []);
+
+  const handleFinishAnswer = async () => {
+    if (!currentQuestion) return;
+
     setIsRecording(false);
+
+    const seconds = Math.min(elapsedTime, 120);
+
+    const recorder = recorderRef.current;
+    if (recorder && recorder.state !== 'inactive') {
+      await new Promise<void>((resolve) => {
+        recorder.onstop = async () => {
+          try {
+            const blob = new Blob(chunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+            if (blob.size > 0) {
+              await submitAnswerAudio(currentQuestion.id, seconds, blob);
+            } else {
+              await submitAnswerTime(currentQuestion.id, seconds);
+            }
+          } catch {
+            await submitAnswerTime(currentQuestion.id, seconds);
+          }
+          resolve();
+        };
+        recorder.stop();
+      });
+    } else {
+      await submitAnswerTime(currentQuestion.id, seconds);
+    }
 
     if (isLastQuestion) {
       navigate('/interview-complete');
     } else {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setElapsedTime(0);
+      isFinishingRef.current = false;
     }
   };
 
@@ -87,7 +181,6 @@ export function InterviewSession() {
   return (
     <section className={styles.page}>
       <div className={styles.container}>
-        {/* 메인 비디오 영역 */}
         <div className={styles.videoSection}>
           <div className={styles.videoBackground}>
             <div className={styles.videoBackgroundInner}>
@@ -100,7 +193,6 @@ export function InterviewSession() {
             <div className={styles.videoOverlay} />
           </div>
 
-          {/* 좌측 상단 배지 */}
           <div className={styles.topLeftBadges}>
             <div className={styles.liveSessionBadge}>
               <span className={styles.liveIndicator} />
@@ -111,7 +203,6 @@ export function InterviewSession() {
             </div>
           </div>
 
-          {/* 우측 상단 배지 */}
           <div className={styles.topRightBadge}>
             <div className={styles.questionCountBadge}>
               <i className={`fa-solid fa-microphone-lines ${styles.micIcon}`} />
@@ -119,12 +210,9 @@ export function InterviewSession() {
             </div>
           </div>
 
-          {/* 하단 질문 카드 */}
           <div className={styles.questionCardArea}>
             <div className={styles.questionCard}>
-              <p className={styles.questionText}>
-                "{currentQuestion.question}"
-              </p>
+              <p className={styles.questionText}>"질문은 음성으로 제공됩니다."</p>
               {isRecording && (
                 <div className={styles.listeningIndicator}>
                   <div className={styles.audioWave}>
@@ -142,9 +230,7 @@ export function InterviewSession() {
           </div>
         </div>
 
-        {/* 하단 컨트롤 영역 */}
         <div className={styles.controlsGrid}>
-          {/* 왼쪽: 컨트롤 패널 */}
           <div className={styles.controlPanel}>
             <div className={styles.controlInfo}>
               <div className={styles.infoColumn}>
@@ -176,20 +262,19 @@ export function InterviewSession() {
             </div>
           </div>
 
-          {/* 오른쪽: 가이드 패널 */}
           <div className={styles.guidePanel}>
             <h5 className={styles.guideTitle}>Interview Guide</h5>
             <ul className={styles.guideList}>
               <li className={styles.guideItem}>
                 <i className={`fa-solid fa-circle-check ${styles.guideCheckIcon}`} />
                 <span className={styles.guideText}>
-                  STAR 기법을 활용하여 상황, 과제, 행동, 결과를 명확히 하세요.
+                  STAR 기법으로 상황, 과제, 행동, 결과를 명확히 말해 주세요.
                 </span>
               </li>
               <li className={styles.guideItem}>
                 <i className={`fa-solid fa-circle-check ${styles.guideCheckIcon}`} />
                 <span className={styles.guideText}>
-                  기술적 키워드를 적절히 섞어 전문성을 보여주세요.
+                  기술적 포인트를 구체적으로 보여 주세요.
                 </span>
               </li>
             </ul>
