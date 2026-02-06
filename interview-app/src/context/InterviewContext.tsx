@@ -14,6 +14,8 @@ import type {
   Report,
 } from '../types';
 import TossLogo from '../assets/Toss_Symbol_Primary.png';
+import GoogleLogo from '../assets/google-color.svg';
+import KakaoLogo from '../assets/kakao.png';
 
 interface InterviewContextType extends InterviewState {
   currentQuestion: Question | null;
@@ -80,6 +82,54 @@ const companiesSeed: Company[] = [
         active: false,
         focus_points: [],
       },
+    ],
+  },
+  {
+    company_id: 'google',
+    name: 'Google',
+    logo: GoogleLogo,
+    company_summary: '혁신과 창의성을 기반으로 세상의 정보를 정리하는 글로벌 테크 리더',
+    talent_profile: ['기술적 우수성', '창의적 문제 해결', '데이터 기반 의사결정'],
+    culture_fit: ['개방적 소통', '실험 정신', '사용자 중심'],
+    jobs: [
+      {
+        job_id: 'frontend',
+        title: 'Frontend Developer',
+        active: true,
+        focus_points: [
+          '대규모 사용자 대상 웹 애플리케이션 설계 및 구현',
+          '성능 최적화 및 접근성 개선을 통한 사용자 경험 향상',
+          'Angular, React 등 최신 프레임워크 활용한 UI 개발',
+          '크로스 브라우저 호환성 및 반응형 디자인 구현',
+          '협업을 통한 디자인 시스템 구축 및 유지보수',
+        ],
+      },
+      { job_id: 'backend', title: 'Backend Developer', active: false, focus_points: [] },
+      { job_id: 'data', title: 'Data Scientist', active: false, focus_points: [] },
+    ],
+  },
+  {
+    company_id: 'kakao',
+    name: 'Kakao',
+    logo: KakaoLogo,
+    company_summary: '일상의 모든 순간을 연결하는 국내 최대 IT 플랫폼 기업',
+    talent_profile: ['사용자 중심 사고', '적극적 협업', '빠른 실행력'],
+    culture_fit: ['수평적 문화', '자율과 책임', '성장 마인드'],
+    jobs: [
+      {
+        job_id: 'frontend',
+        title: 'Frontend Developer',
+        active: true,
+        focus_points: [
+          '카카오톡, 카카오맵 등 주요 서비스의 웹 인터페이스 개발',
+          'React 기반 SPA 설계 및 상태 관리 최적화',
+          '모바일 웹 성능 개선 및 사용자 경험 향상',
+          '컴포넌트 기반 아키텍처 설계 및 재사용성 극대화',
+          'A/B 테스트를 통한 데이터 기반 UI/UX 개선',
+        ],
+      },
+      { job_id: 'pm', title: 'Product Manager', active: false, focus_points: [] },
+      { job_id: 'server', title: 'Server Developer', active: false, focus_points: [] },
     ],
   },
 ];
@@ -340,6 +390,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       parseDoc,
       speakQuestion,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       state,
       currentQuestion,
@@ -358,6 +409,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useInterview() {
   const context = useContext(InterviewContext);
   if (!context) {
