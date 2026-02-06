@@ -210,6 +210,16 @@
   text-transform: uppercase;
 }
 
+.statusMessage {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.statusError {
+  color: #dc2626;
+}
+
 /* ─── 하단 컨트롤 영역 ─── */
 
 .controlsGrid {
@@ -311,6 +321,12 @@
 
 .finishButton:hover {
   transform: scale(1.05);
+}
+
+.finishButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .finishLabel {

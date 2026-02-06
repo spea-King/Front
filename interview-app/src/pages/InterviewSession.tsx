@@ -27,6 +27,12 @@ export function InterviewSession() {
   } = useInterview();
 
   const [formattedTime, setFormattedTime] = useState('00:00');
+  const [micError, setMicError] = useState<string | null>(null);
+  const [ttsError, setTtsError] = useState<string | null>(null);
+  const [showQuestionText, setShowQuestionText] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
+
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
   const isFinishingRef = useRef(false);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -75,43 +81,57 @@ export function InterviewSession() {
   }, [isRecording, setVoiceVolume]);
 
   useEffect(() => {
+    const avg = voiceVolume.reduce((acc, cur) => acc + cur, 0) / voiceVolume.length;
+    if (avg < 35) setSpeedLabel('느림');
+    else if (avg < 60) setSpeedLabel('적정');
+    else setSpeedLabel('빠름');
+  }, [voiceVolume]);
+
+  const startRecording = async () => {
+    if (!currentQuestion || !sessionId) return;
+
+    try {
+      const url = await speakQuestion(currentQuestion.id);
+      if (url) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          URL.revokeObjectURL(audioRef.current.src);
+        }
+        audioRef.current = new Audio(url);
+        audioRef.current.play().catch(() => undefined);
+      }
+      setTtsError(null);
+      setShowQuestionText(false);
+    } catch {
+      setTtsError('질문 음성을 불러오지 못했습니다. 텍스트를 표시합니다.');
+      setShowQuestionText(true);
+    }
+
+    try {
+      if (!streamRef.current) {
+        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+      const recorder = new MediaRecorder(streamRef.current);
+      chunksRef.current = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) chunksRef.current.push(e.data);
+      };
+      recorderRef.current = recorder;
+      recorder.start();
+      setIsRecording(true);
+      setMicError(null);
+    } catch {
+      setMicError('마이크 권한이 필요합니다. 브라우저 설정에서 허용해 주세요.');
+      setIsRecording(true);
+    }
+  };
+
+  useEffect(() => {
     if (!currentQuestion || !sessionId) return;
     isFinishingRef.current = false;
     setElapsedTime(0);
 
-    const start = async () => {
-      try {
-        const url = await speakQuestion(currentQuestion.id);
-        if (url) {
-          if (audioRef.current) {
-            audioRef.current.pause();
-            URL.revokeObjectURL(audioRef.current.src);
-          }
-          audioRef.current = new Audio(url);
-          audioRef.current.play().catch(() => undefined);
-        }
-      } catch {
-        // ignore
-      }
-
-      try {
-        if (!streamRef.current) {
-          streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
-        }
-        const recorder = new MediaRecorder(streamRef.current);
-        chunksRef.current = [];
-        recorder.ondataavailable = (e) => {
-          if (e.data.size > 0) chunksRef.current.push(e.data);
-        };
-        recorderRef.current = recorder;
-        recorder.start();
-        setIsRecording(true);
-      } catch {
-        setIsRecording(true);
-      }
-    };
-
-    start();
+    startRecording();
 
     return () => {
       if (audioRef.current) {
@@ -134,6 +154,8 @@ export function InterviewSession() {
 
   const handleFinishAnswer = async () => {
     if (!currentQuestion) return;
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
     setIsRecording(false);
 
@@ -168,7 +190,10 @@ export function InterviewSession() {
       setElapsedTime(0);
       isFinishingRef.current = false;
     }
+    setIsSubmitting(false);
   };
+
+  const progressPercent = Math.min(100, Math.round((elapsedTime / 120) * 100));
 
   if (!currentQuestion) {
     return (
@@ -212,7 +237,15 @@ export function InterviewSession() {
 
           <div className={styles.questionCardArea}>
             <div className={styles.questionCard}>
-              <p className={styles.questionText}>"질문은 음성으로 제공됩니다."</p>
+              <p className={styles.questionText}>
+                {showQuestionText ? `"${currentQuestion.text}"` : '"질문은 음성으로 제공됩니다."'}
+              </p>
+              {ttsError && (
+                <p className={`${styles.statusMessage} ${styles.statusError}`}>{ttsError}</p>
+              )}
+              {micError && (
+                <p className={`${styles.statusMessage} ${styles.statusError}`}>{micError}</p>
+              )}
               {isRecording && (
                 <div className={styles.listeningIndicator}>
                   <div className={styles.audioWave}>
@@ -239,6 +272,13 @@ export function InterviewSession() {
               </div>
               <div className={styles.divider} />
               <div className={styles.infoColumn}>
+                <span className={styles.infoLabel}>Progress</span>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${progressPercent}%` }} />
+                </div>
+              </div>
+              <div className={styles.divider} />
+              <div className={styles.infoColumn}>
                 <span className={styles.infoLabel}>Voice Volume</span>
                 <div className={styles.volumeBars}>
                   {voiceVolume.map((height, index) => (
@@ -253,11 +293,24 @@ export function InterviewSession() {
             </div>
 
             <div className={styles.finishSection}>
-              <button onClick={handleFinishAnswer} className={styles.finishButton}>
+              <button
+                onClick={startRecording}
+                className={styles.startButton}
+                disabled={isRecording || isSubmitting}
+              >
+                <i className="fa-solid fa-play" />
+              </button>
+              <button
+                onClick={handleFinishAnswer}
+                className={styles.finishButton}
+                disabled={isSubmitting}
+              >
                 <i className="fa-solid fa-stop" />
               </button>
               <div className={styles.finishLabel}>
-                <span className={styles.finishLabelText}>Finish Answer</span>
+                <span className={styles.finishLabelText}>
+                  {isSubmitting ? '전송 중...' : 'Start / Finish'}
+                </span>
               </div>
             </div>
           </div>
@@ -278,6 +331,20 @@ export function InterviewSession() {
                 </span>
               </li>
             </ul>
+
+            <div className={styles.speedPanel}>
+              <span className={styles.speedTitle}>말 속도</span>
+              <div className={styles.speedLights}>
+                <div className={`${styles.speedLight} ${speedLabel === '빠름' ? styles.speedOnFast : ''}`} />
+                <div className={`${styles.speedLight} ${speedLabel === '적정' ? styles.speedOnNormal : ''}`} />
+                <div className={`${styles.speedLight} ${speedLabel === '느림' ? styles.speedOnSlow : ''}`} />
+              </div>
+              <div className={styles.speedLabels}>
+                <span>빠름</span>
+                <span>적정</span>
+                <span>느림</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
