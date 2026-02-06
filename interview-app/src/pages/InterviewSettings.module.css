@@ -1,4 +1,4 @@
-/* Interview Settings Page Styles */
+﻿/* Interview Settings Page Styles */
 
 .page {
   min-height: 100vh;
@@ -9,6 +9,89 @@
 .container {
   max-width: 1000px;
   margin: 0 auto;
+}
+
+.startOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  backdrop-filter: blur(4px);
+}
+
+.startCard {
+  width: min(520px, 90vw);
+  background: #fff;
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+  text-align: center;
+  position: relative;
+}
+
+.startPulse {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(59, 130, 246, 0.15);
+  border-radius: 999px;
+  animation: pulse 1.6s ease-out infinite;
+}
+
+.startBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #047857;
+  margin-bottom: 1rem;
+}
+
+.startClover {
+  font-size: 1rem;
+}
+
+.startBadgeText {
+  letter-spacing: 0.08em;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translateX(-50%) scale(0.9);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translateX(-50%) scale(1.2);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.startTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 0.75rem;
+}
+
+.startMessage {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+  font-weight: 600;
 }
 
 .header {

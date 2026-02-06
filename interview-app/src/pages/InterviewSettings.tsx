@@ -5,9 +5,25 @@ import { useInterview } from '../context/InterviewContext';
 import type { InterviewSettings as SettingsType } from '../types';
 import styles from './InterviewSettings.module.css';
 
+const encouragements = [
+  (name: string) => `면접이 곧 시작됩니다. ${name}님, 준비한 만큼 충분히 잘하실 수 있어요.`,
+  (name: string) => `좋습니다 ${name}님. 긴장 풀고, 한 질문씩 차분히 넘어가면 됩니다.`,
+  (name: string) => `${name}님, 지금까지의 노력이 답변에 드러날 거예요. 자신 있게 시작하세요.`
+];
+
+const extractName = (text?: string | null) => {
+  if (!text) return null;
+  const patterns = [/이름\s*[:：]?\s*([가-힣]{2,4})/, /성명\s*[:：]?\s*([가-힣]{2,4})/];
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match && match[1]) return match[1];
+  }
+  return null;
+};
+
 export function InterviewSettings() {
   const navigate = useNavigate();
-  const { setSettings, startSession, selectedCompany, selectedJob } = useInterview();
+  const { setSettings, startSession, selectedCompany, selectedJob, resumeText, selfIntroText } = useInterview();
   const [localSettings, setLocalSettings] = useState<SettingsType>({
     questionCount: 5,
     voice: 'female',
@@ -32,8 +48,24 @@ export function InterviewSettings() {
     }
   };
 
+  const candidateName = extractName(resumeText) || extractName(selfIntroText) || '지원자';
+  const message = encouragements[(candidateName.length + localSettings.questionCount) % encouragements.length](candidateName);
+
   return (
     <div className={styles.page}>
+      {isStarting && (
+        <div className={styles.startOverlay}>
+          <div className={styles.startCard}>
+            <div className={styles.startPulse} />
+            <div className={styles.startBadge}>
+              <span className={styles.startClover}>🍀</span>
+              <span className={styles.startBadgeText}>행운을 빌어요</span>
+            </div>
+            <p className={styles.startTitle}>면접 준비 중</p>
+            <p className={styles.startMessage}>{message}</p>
+          </div>
+        </div>
+      )}
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.badge}>

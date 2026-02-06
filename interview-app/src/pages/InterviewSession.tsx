@@ -42,8 +42,11 @@ export function InterviewSession() {
   const [speedLabel, setSpeedLabel] = useState<'느림' | '적정' | '빠름'>('적정');
   const [timerActive, setTimerActive] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const isLastQuestion = currentQuestionIndex === settings.questionCount - 1;
+  const isFirstQuestion = currentQuestionIndex === 0;
+
   const interviewerImage = (() => {
     if (settings.style === 'pressure') {
       return settings.voice === 'male'
@@ -214,10 +217,25 @@ export function InterviewSession() {
     }
   };
 
+  const handleStartFirst = () => {
+    if (hasStarted) return;
+    setHasStarted(true);
+    startRecording();
+  };
+
   useEffect(() => {
     if (!currentQuestion || !sessionId) return;
     isFinishingRef.current = false;
-    setIsSpeaking(true);
+
+    if (isFirstQuestion) {
+      return () => {
+        if (audioRef.current) {
+          audioRef.current.pause();
+          URL.revokeObjectURL(audioRef.current.src);
+        }
+      };
+    }
+
     startRecording();
 
     return () => {
@@ -390,12 +408,21 @@ export function InterviewSession() {
             </div>
 
             <div className={styles.finishSection}>
-              <button
-                className={`${styles.statusButton} ${isSpeaking ? styles.statusSpeaking : isRecording ? styles.statusRecording : styles.statusIdle}`}
-                disabled
-              >
-                {isSpeaking ? '질문 재생 중' : isRecording ? '녹음 중' : '대기 중'}
-              </button>
+              {isFirstQuestion && !hasStarted ? (
+                <button
+                  onClick={handleStartFirst}
+                  className={styles.primaryAction}
+                >
+                  면접 시작
+                </button>
+              ) : (
+                <button
+                  className={`${styles.statusButton} ${isSpeaking ? styles.statusSpeaking : isRecording ? styles.statusRecording : styles.statusIdle}`}
+                  disabled
+                >
+                  {isSpeaking ? '질문 재생 중' : isRecording ? '녹음 중' : '대기 중'}
+                </button>
+              )}
               <button
                 onClick={handleFinishAnswer}
                 className={styles.finishButton}
