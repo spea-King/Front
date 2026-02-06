@@ -25,7 +25,7 @@ export function InterviewSettings() {
     setSettings(localSettings);
     setIsStarting(true);
     try {
-      await startSession();
+      await startSession(localSettings);
       navigate('/interview');
     } finally {
       setIsStarting(false);
