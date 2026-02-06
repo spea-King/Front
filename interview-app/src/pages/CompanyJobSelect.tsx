@@ -30,9 +30,9 @@ export function CompanyJobSelect() {
             <div>
               <h1 className={styles.title}>목표 기업 선택</h1>
               <p className={styles.description}>
-                입력한 <span className={styles.highlight}>기업 정보</span>와
-                <span className={styles.highlight}> 직무 포인트</span>를 바탕으로
-                질문을 <span className={styles.highlightStrong}>개인화</span>합니다.
+                <span className={styles.highlight}>기업마다 보유한 정보</span>와
+                <span className={styles.highlight}> 지원자 데이터</span>를 함께 분석해
+                <span className={styles.highlightStrong}> 실제 면접 질문</span>을 생성합니다.
               </p>
               <p className={styles.subDescription}>
                 인재상·컬처핏·직무 키워드를 함께 반영해 실제 면접처럼 묻습니다.

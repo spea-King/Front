@@ -1,4 +1,4 @@
-/* Landing Page Styles */
+﻿/* Landing Page Styles */
 
 .landing {
   min-height: 100vh;
@@ -72,7 +72,7 @@
   animation-delay: 0.4s;
   color: #0066FF;
 }
-.titleWord3 { animation-delay: 0.6s; }
+titleWord3 { animation-delay: 0.6s; }
 
 @keyframes fadeInUp {
   from {
@@ -83,6 +83,32 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.brandTitle {
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.brandAccentA {
+  color: #2563eb;
+  text-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.brandAccentI {
+  color: #2563eb;
+  text-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.brandSubtitle {
+  margin-left: 0.5rem;
+  font-size: clamp(1rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .subtitle {

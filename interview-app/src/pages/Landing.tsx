@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+﻿import { useNavigate } from 'react-router-dom';
 import { Sparkles } from 'lucide-react';
 import styles from './Landing.module.css';
 
@@ -7,7 +7,6 @@ export function Landing() {
 
   return (
     <div className={styles.landing}>
-      {/* Animated background elements */}
       <div className={styles.backgroundEffect}>
         <div className={`${styles.blob} ${styles.blob1}`} />
         <div className={`${styles.blob} ${styles.blob2}`} />
@@ -15,7 +14,6 @@ export function Landing() {
       </div>
 
       <div className={styles.container}>
-        {/* Logo/Icon */}
         <div className={styles.iconWrapper}>
           <div className={styles.iconGlow} />
           <div className={styles.iconBox}>
@@ -23,28 +21,23 @@ export function Landing() {
           </div>
         </div>
 
-        {/* Title with staggered animation */}
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>
-            <span className={`${styles.titleWord} ${styles.titleWord1}`}>
-              실전
-            </span>{' '}
-            <span className={`${styles.titleWord} ${styles.titleWord2}`}>
-              면접
-            </span>{' '}
-            <span className={`${styles.titleWord} ${styles.titleWord3}`}>
-              연습
-            </span>
+          <h1 className={styles.brandTitle}>
+            spe
+            <span className={styles.brandAccentA}>a</span>
+            [K
+            <span className={styles.brandAccentI}>i</span>
+            ng]
+            <span className={styles.brandSubtitle}>: 면접왕</span>
           </h1>
-
           <p className={styles.subtitle}>
-            답을 알려주는 AI가 아니라
+            <span className={styles.highlight}>기업·지원자 데이터</span>를 반영한
             <br />
-            <span className={styles.highlight}>말하는 연습</span>을 돕습니다
+            <span className={styles.highlight}>맞춤형 AI 질문</span>으로
+            <span className={styles.highlight}> 실전 면접</span>을 연습하세요.
           </p>
         </div>
 
-        {/* CTA Button */}
         <div className={styles.ctaSection}>
           <button
             onClick={() => navigate('/company-job')}
@@ -59,9 +52,8 @@ export function Landing() {
           </button>
         </div>
 
-        {/* Subtitle */}
         <p className={styles.note}>
-          120초 안에 완벽한 답변을 만들어보세요
+          실전과 같은 긴장감으로 2분 답변을 훈련해 보세요
         </p>
       </div>
     </div>
