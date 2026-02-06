@@ -30,8 +30,7 @@ export function CompanyJobSelect() {
             <div>
               <h1 className={styles.title}>목표 기업 선택</h1>
               <p className={styles.description}>
-                연습하고 싶은 기업의 인재상과 직무를 설정하여 맞춤형 질문을
-                받으세요.
+                기업 정보와 직무 포인트를 기반으로 맞춤형 면접 질문을 생성합니다.
               </p>
             </div>
             <div className={styles.navButtons}>

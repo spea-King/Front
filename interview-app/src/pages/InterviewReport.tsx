@@ -18,6 +18,23 @@ export function InterviewReport() {
         <div className={styles.container}>
           <div className={styles.header}>
             <h1 className={styles.title}>리포트를 불러오는 중...</h1>
+            <p className={styles.subtitle}>답변을 분석하고 요약을 구성하고 있어요</p>
+          </div>
+          <div className={styles.loadingBlock}>
+            <div className={styles.loadingSpinner} />
+            <div className={styles.loadingText}>잠시만 기다려 주세요</div>
+          </div>
+          <div className={styles.loadingGrid}>
+            <div className={styles.loadingCard}>
+              <div className={styles.loadingLine} />
+              <div className={styles.loadingLine} />
+              <div className={styles.loadingLineShort} />
+            </div>
+            <div className={styles.loadingCard}>
+              <div className={styles.loadingLine} />
+              <div className={styles.loadingLine} />
+              <div className={styles.loadingLineShort} />
+            </div>
           </div>
         </div>
       </div>
