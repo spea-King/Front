@@ -28,7 +28,7 @@ export function Landing() {
             [K
             <span className={styles.brandAccentI}>i</span>
             ng]
-            <span className={styles.brandSubtitle}>: 면접왕</span>
+            <span className={styles.brandSubtitle}>: <span className={styles.glassTag}>면접왕</span></span>
           </h1>
           <p className={styles.subtitle}>
             <span className={styles.highlight}>기업·지원자 데이터</span>를 반영한
