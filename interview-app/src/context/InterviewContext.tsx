@@ -35,7 +35,7 @@ interface InterviewContextType extends InterviewState {
   setVoiceVolume: (volume: number[]) => void;
   setQuestions: (questions: Question[]) => void;
   resetInterview: () => void;
-  startSession: () => Promise<void>;
+  startSession: (overrideSettings?: InterviewSettings) => Promise<void>;
   fetchNextQuestion: () => Promise<void>;
   submitAnswerTime: (questionId: string, seconds: number) => Promise<void>;
   submitAnswerAudio: (
@@ -190,18 +190,26 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     return data.text || '';
   };
 
-  const startSession = async () => {
+  const startSession = async (overrideSettings?: InterviewSettings) => {
     if (!state.selectedCompany || !state.selectedJob) {
       throw new Error('company/job not selected');
     }
+
+    const effectiveSettings = overrideSettings ?? state.settings;
     const payload = {
       company_id: state.selectedCompany,
       job_id: state.selectedJob,
       resume_text: state.resumeText,
       self_intro_text: state.selfIntroText,
+<<<<<<< Updated upstream
       question_count: state.settings.questionCount,
       voice: state.settings.voice,
       style: state.settings.style,
+=======
+      question_count: effectiveSettings.questionCount,
+      voice: effectiveSettings.voice,
+      style: effectiveSettings.style
+>>>>>>> Stashed changes
     };
 
     const res = await fetch(`${API_BASE}/api/session/start`, {
@@ -226,6 +234,10 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       sessionId: data.session_id,
       currentQuestionIndex: 0,
       remainingTime: firstQuestion.timeLimit,
+<<<<<<< Updated upstream
+=======
+      settings: effectiveSettings
+>>>>>>> Stashed changes
     }));
     setQuestionsState([firstQuestion]);
     setElapsedTimeState(0);
