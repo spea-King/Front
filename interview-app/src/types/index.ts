@@ -8,6 +8,7 @@
 export interface Company {
   company_id: string;
   name: string;
+  logo?: string;
   company_summary: string;
   talent_profile: string[];
   culture_fit: string[];
