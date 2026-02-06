@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { InterviewProvider } from './context/InterviewContext';
 import { Landing } from './pages/Landing';
 import { CompanyJobSelect } from './pages/CompanyJobSelect';
@@ -10,28 +11,41 @@ import { InterviewReport } from './pages/InterviewReport';
 
 import styles from './App.module.css';
 
+import ConfirmModal from "./components/ConfirmModal";
+
 function HomeButton() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  if (location.pathname === '/') return null;
+  if (location.pathname === "/") return null;
 
-  // 면접 중일 때는 한 번 물어보는 로직 추가 (선택 사항)
-  const handleHomeClick = () => {
-    if (location.pathname === '/interview') {
-      if (window.confirm("메인으로 돌아가시겠습니까? 진행 중인 면접은 저장되지 않습니다.")) {
-        navigate('/');
-      }
+  const handleHomeClick = (): void => {
+    if (location.pathname === "/interview") {
+      setIsModalOpen(true);
     } else {
-      navigate('/');
+      navigate("/");
     }
   };
 
+  const handleConfirm = (): void => {
+    setIsModalOpen(false);
+    navigate("/");
+  };
+
   return (
-    <button className={styles.homeButton} onClick={handleHomeClick}>
-      <i className={`fa-solid fa-house ${styles.homeIcon}`}></i>
-      <span className={styles.buttonText}>홈으로</span>
-    </button>
+    <>
+      <button className={styles.homeButton} onClick={handleHomeClick}>
+        <i className={`fa-solid fa-house ${styles.homeIcon}`} />
+        <span className={styles.buttonText}>홈으로</span>
+      </button>
+
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onCancel={() => setIsModalOpen(false)}
+        onConfirm={handleConfirm}
+      />
+    </>
   );
 }
 
