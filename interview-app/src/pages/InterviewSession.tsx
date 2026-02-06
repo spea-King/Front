@@ -93,7 +93,9 @@ export function InterviewSession() {
 
   const startRecording = async () => {
     if (!currentQuestion || !sessionId) return;
+    if (isRecording || isSubmitting) return;
 
+    setElapsedTime(0);
     try {
       const url = await speakQuestion(currentQuestion.id);
       if (url) {
