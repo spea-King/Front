@@ -3,6 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useInterview } from '../context/InterviewContext';
 import styles from './InterviewSession.module.css';
 
+import interviewerManPressure from '../assets/interviewer/interviewer_man_pressure.png';
+import interviewerManPeaceful from '../assets/interviewer/interviewer_man_peaceful.png';
+
+import interviewerWomanPressure from '../assets/interviewer/interviewer_woman_pressure.png';
+import interviewerWomanPeaceful from '../assets/interviewer/interviewer_woman_peaceful.png';
+
 export function InterviewSession() {
   const navigate = useNavigate();
   const {
@@ -40,12 +46,12 @@ export function InterviewSession() {
   const interviewerImage = (() => {
     if (settings.style === 'pressure') {
       return settings.voice === 'male'
-        ? 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=1200&q=80'
-        : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1200&q=80';
+        ? interviewerManPressure
+        : interviewerWomanPressure;
     }
     return settings.voice === 'male'
-      ? 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1200&q=80'
-      : 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=1200&q=80';
+      ? interviewerManPeaceful
+      : interviewerWomanPeaceful;
   })();
 
   const isFinishingRef = useRef(false);
