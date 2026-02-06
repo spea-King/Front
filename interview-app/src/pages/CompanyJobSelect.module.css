@@ -1,0 +1,410 @@
+/* Company Job Select Page Styles */
+
+.page {
+  min-height: 100vh;
+  background: #F9FAFB;
+  padding: 3rem 1rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #EBF5FF;
+  border: 1px solid #0066FF;
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.badgeIcon {
+  width: 16px;
+  height: 16px;
+  color: #0066FF;
+}
+
+.badgeText {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0066FF;
+  letter-spacing: 0.05em;
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  animation: slideDown 0.6s ease-out 0.1s both;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: #475569;
+  animation: slideDown 0.6s ease-out 0.2s both;
+}
+
+.section {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #E5E7EB;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s ease-out both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.section:nth-child(2) { animation-delay: 0.3s; }
+.section:nth-child(3) { animation-delay: 0.4s; }
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 1.5rem;
+}
+
+.companyCard {
+  position: relative;
+  padding: 2.5rem;
+  border-radius: 32px;
+  border: 2px solid #F1F5F9;
+  background: #F8FAFC;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.companyCard:hover {
+  background: white;
+  border-color: #E2E8F0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.companyCard.selected {
+  border-color: #0066FF;
+  border-width: 2px;
+  background: white;
+  box-shadow: 0 20px 60px rgba(0, 102, 255, 0.15);
+}
+
+.companyHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.companyTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.companyIcon {
+  width: 64px;
+  height: 64px;
+  background: #EBF5FF;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.875rem;
+  color: #0066FF;
+  transition: transform 0.3s ease;
+}
+
+.companyCard:hover .companyIcon {
+  transform: scale(1.1);
+}
+
+.companyName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 0.5rem;
+}
+
+.selectedBadge {
+  padding: 0.375rem 1rem;
+  background: #0066FF;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+@keyframes checkPop {
+  0% { transform: scale(0); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.companySummary {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.coreValuesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.coreValuesLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.coreValuesTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.coreValueTag {
+  padding: 0.375rem 0.75rem;
+  background: #F8FAFC;
+  color: #475569;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+}
+
+.placeholderBars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.placeholderBar {
+  height: 4px;
+  background: #F1F5F9;
+  border-radius: 999px;
+}
+
+.placeholderBar:first-child {
+  width: 100%;
+}
+
+.placeholderBar:last-child {
+  width: 66.67%;
+}
+
+.jobGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.jobCard {
+  position: relative;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 2px solid #F1F5F9;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  overflow: hidden;
+}
+
+.jobCard:hover:not(.disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #E2E8F0;
+}
+
+.jobCard.selected {
+  border-color: #0066FF;
+  border-width: 2px;
+  background: rgba(0, 102, 255, 0.03);
+  box-shadow: none;
+}
+
+.jobCard.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #F8FAFC;
+}
+
+.jobIconBackground {
+  position: absolute;
+  right: -1rem;
+  bottom: -1rem;
+  font-size: 4rem;
+  color: rgba(0, 102, 255, 0.08);
+  transition: transform 0.3s ease;
+}
+
+.jobCard:hover .jobIconBackground {
+  transform: scale(1.1);
+}
+
+.jobHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.jobTitle {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.disabledBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+}
+
+.jobFocusPoints {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.focusPoint {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.focusBullet {
+  width: 6px;
+  height: 6px;
+  background: #94a3b8;
+  border-radius: 999px;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.focusText {
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.navigation {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+}
+
+.nextButton {
+  position: relative;
+  padding: 1.25rem 2.5rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.nextButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.nextButton:not(:disabled):hover {
+  transform: scale(1.05);
+  box-shadow: 0 15px 35px rgba(6, 182, 212, 0.3);
+}
+
+.nextButtonBg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+}
+
+.nextButtonBg.disabled {
+  background: #cbd5e1;
+}
+
+.nextButtonShine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+}
+
+.nextButton:not(:disabled):hover .nextButtonShine {
+  transform: translateX(100%);
+  transition: transform 0.7s ease;
+}
+
+.nextButtonContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 2rem 1rem;
+  }
+
+  .section {
+    padding: 1.5rem;
+  }
+
+  .companyCard {
+    padding: 1.5rem;
+  }
+
+  .companyName {
+    font-size: 1.5rem;
+  }
+
+  .jobGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,417 @@
+/* Resume Upload Page Styles */
+
+.page {
+  min-height: 100vh;
+  background: #F9FAFB;
+  padding: 3rem 1rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(6, 182, 212, 0.1);
+  border: 2px solid rgba(6, 182, 212, 0.2);
+  border-radius: 999px;
+  margin-bottom: 1.5rem;
+  animation: slideDown 0.6s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.badgeIcon {
+  width: 20px;
+  height: 20px;
+  color: #0891b2;
+}
+
+.badgeText {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0e7490;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.title {
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  color: #0f172a;
+  margin-bottom: 1rem;
+  animation: slideDown 0.6s ease-out 0.1s both;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: #475569;
+  animation: slideDown 0.6s ease-out 0.2s both;
+}
+
+.uploadSection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  animation: slideUp 0.6s ease-out 0.3s both;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropzone {
+  position: relative;
+  padding: 4rem 2rem;
+  border: 2px dashed #E2E8F0;
+  border-radius: 40px;
+  background: #FFFFFF;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.dropzone:hover {
+  border-color: #93C5FD;
+  background: rgba(239, 246, 255, 0.1);
+}
+
+.dropzone.dragActive {
+  border-color: #0066FF;
+  background: rgba(239, 246, 255, 0.1);
+}
+
+.dropzone.error {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.uploadIconWrapper {
+  width: 80px;
+  height: 80px;
+  background: #F8FAFC;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.dropzone:hover .uploadIconWrapper {
+  background: #DBEAFE;
+}
+
+.uploadIcon {
+  width: 48px;
+  height: 48px;
+  color: #CBD5E1;
+  transition: all 0.3s ease;
+}
+
+.dropzone:hover .uploadIcon,
+.dropzone.dragActive .uploadIcon {
+  color: #3B82F6;
+}
+
+.uploadContent {
+  text-align: center;
+}
+
+.uploadTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.uploadDescription {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.browseButton {
+  padding: 0.75rem 2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #475569;
+  background: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.browseButton:hover {
+  border-color: #3B82F6;
+  color: #3B82F6;
+}
+
+.uploadTypeLabel {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.uploadTypeTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.uploadTypeDescription {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.securityNote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  padding: 1rem;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.securityIcon {
+  color: #3B82F6;
+  width: 20px;
+  height: 20px;
+}
+
+.filePreview {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(99, 102, 241, 0.1));
+  border: 2px solid #3B82F6;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.coverLetterIcon {
+  font-size: 1.875rem;
+  color: #CBD5E1;
+}
+
+.resumeIcon {
+  font-size: 1.875rem;
+  color: #CBD5E1;
+}
+
+.dropzone:hover .coverLetterIcon,
+.dropzone:hover .resumeIcon,
+.dropzone.dragActive .coverLetterIcon,
+.dropzone.dragActive .resumeIcon {
+  color: #3B82F6;
+}
+
+.fileIcon {
+  width: 48px;
+  height: 48px;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 12px;
+  color: #3B82F6;
+  flex-shrink: 0;
+}
+
+.fileInfo {
+  flex: 1;
+}
+
+.fileName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.25rem;
+  word-break: break-word;
+}
+
+.fileSize {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.removeButton {
+  padding: 0.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.removeButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+.errorMessage {
+  margin-top: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.3);
+  border-radius: 12px;
+  color: #dc2626;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  animation: shake 0.5s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.errorIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.securityNote {
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  animation: slideUp 0.6s ease-out 0.4s both;
+}
+
+.securityHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.securityIcon {
+  width: 24px;
+  height: 24px;
+  color: #8b5cf6;
+}
+
+.securityTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #6d28d9;
+}
+
+.securityText {
+  font-size: 0.95rem;
+  color: #5b21b6;
+  line-height: 1.6;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+  animation: slideUp 0.6s ease-out 0.5s both;
+}
+
+.nextButton {
+  padding: 1.25rem 4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: white;
+  background: #0f172a;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
+}
+
+.nextButton:hover {
+  transform: scale(1.05);
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.25);
+}
+
+.nextButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 2rem 1rem;
+  }
+
+  .uploadSection {
+    padding: 1.5rem;
+  }
+
+  .dropzone {
+    padding: 3rem 1.5rem;
+  }
+
+  .uploadIcon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .navigation {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .backButton,
+  .nextButton {
+    width: 100%;
+    justify-content: center;
+  }
+}

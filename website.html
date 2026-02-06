@@ -1,0 +1,587 @@
+<html>
+        <head>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" crossorigin="anonymous">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" crossorigin="anonymous">
+            <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" crossorigin="anonymous"></script>
+            <style> * { font-family: 'Pretendard', sans-serif; } </style>
+        </head>
+
+        <div id="vinsign-root" class="relative w-[1440px] min-h-[1024px] bg-slate-50 text-slate-900 font-['Pretendard'] mx-auto border border-slate-200 overflow-clip">
+    <nav id="navbar" class="sticky top-0 z-50 w-full h-20 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-12">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200">
+                <i class="fa-solid fa-microchip text-white text-xl"></i>
+            </div>
+            <span class="font-bold text-xl tracking-tight text-slate-800">Vinsign AI</span>
+        </div>
+        <div class="flex items-center gap-10 text-sm font-semibold text-slate-500">
+            <a href="#landing" class="hover:text-blue-600 transition-colors">홈</a>
+            <a href="#company-select" class="hover:text-blue-600 transition-colors">기업 탐색</a>
+            <a href="#report" class="hover:text-blue-600 transition-colors">결과 리포트</a>
+            <div class="h-4 w-[1px] bg-slate-200"></div>
+            <button class="px-6 py-2.5 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-all shadow-md">로그인</button>
+        </div>
+    </nav>
+
+    <section id="landing" class="relative w-full h-[840px] flex flex-col items-center justify-center text-center px-10 bg-gradient-to-b from-blue-50/50 to-white">
+        <div class="space-y-8 max-w-4xl">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-100 rounded-full">
+                <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+                <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Next-Gen Interview Practice</span>
+            </div>
+            <h1 class="text-7xl font-extrabold tracking-tight leading-[1.1] text-slate-900">
+                당신의 가능성을<br/><span class="text-blue-600">확신으로</span> 바꾸는 시간
+            </h1>
+            <p class="text-2xl text-slate-500 font-medium max-w-2xl mx-auto leading-relaxed">
+                단순한 답변 생성이 아닌, 실전과 같은 긴장감 속에서<br/>당신의 페이스와 논리를 정교하게 다듬어드립니다.
+            </p>
+            <div class="pt-8 flex items-center justify-center gap-4">
+                <a href="#company-select" class="inline-flex items-center justify-center px-10 py-5 bg-blue-600 text-white text-lg font-bold rounded-2xl hover:bg-blue-700 hover:-translate-y-1 transition-all shadow-xl shadow-blue-200">
+                    면접 연습 시작하기
+                    <i class="fa-solid fa-arrow-right ml-3"></i>
+                </a>
+                <button class="px-10 py-5 bg-white text-slate-700 text-lg font-bold rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all">
+                    서비스 둘러보기
+                </button>
+            </div>
+        </div>
+        <div class="absolute bottom-12 flex flex-col items-center gap-2 text-slate-300">
+            <span class="text-[10px] font-bold tracking-widest uppercase">Scroll Down</span>
+            <i class="fa-solid fa-chevron-down animate-bounce"></i>
+        </div>
+    </section>
+
+    <section id="company-select" class="w-full py-32 px-24 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <h2 class="text-4xl font-bold text-slate-900 mb-4">목표 기업 선택</h2>
+                    <p class="text-lg text-slate-500">연습하고 싶은 기업의 인재상과 직무를 설정하여 맞춤형 질문을 받으세요.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-chevron-left text-sm"></i>
+                    </button>
+                    <button class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:bg-slate-50 transition-colors">
+                        <i class="fa-solid fa-chevron-right text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-8 mb-20">
+                <div id="company-toss" class="group p-10 border-2 border-blue-600 rounded-[32px] bg-white shadow-2xl shadow-blue-100 relative transition-all">
+                    <div class="flex justify-between items-start mb-8">
+                        <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-building-columns text-3xl text-blue-600"></i>
+                        </div>
+                        <div class="px-4 py-1.5 bg-blue-600 text-white text-xs font-bold rounded-full">SELECTED</div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3">TOSS</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed">금융을 쉽고 간편하게, 파괴적 혁신을 지향하는 핀테크 리더</p>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Core Values</span>
+                            <div class="flex flex-wrap gap-2 mt-3">
+                                <span class="px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-semibold">문제 해결 집요함</span>
+                                <span class="px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-semibold">고객 중심</span>
+                                <span class="px-3 py-1.5 bg-slate-50 text-slate-600 rounded-lg text-xs font-semibold">빠른 실행</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="company-kakao" class="group p-10 border border-slate-100 rounded-[32px] bg-slate-50/50 hover:bg-white hover:border-slate-200 hover:shadow-xl transition-all cursor-pointer">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 border border-slate-100 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-comment text-3xl text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800">Kakao</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed">일상의 모든 순간을 연결하는 국내 최대 IT 플랫폼 기업</p>
+                    <div class="h-1 bg-slate-100 rounded-full w-full mb-2"></div>
+                    <div class="h-1 bg-slate-100 rounded-full w-2/3"></div>
+                </div>
+
+                <div id="company-naver" class="group p-10 border border-slate-100 rounded-[32px] bg-slate-50/50 hover:bg-white hover:border-slate-200 hover:shadow-xl transition-all cursor-pointer">
+                    <div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 border border-slate-100 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-n text-3xl text-green-500"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-slate-800">NAVER</h3>
+                    <p class="text-slate-500 mb-8 leading-relaxed">검색을 넘어 기술로 세상을 연결하는 글로벌 테크 기업</p>
+                    <div class="h-1 bg-slate-100 rounded-full w-full mb-2"></div>
+                    <div class="h-1 bg-slate-100 rounded-full w-2/3"></div>
+                </div>
+            </div>
+
+            <div id="job-selection" class="space-y-8">
+                <div class="flex items-center gap-4">
+                    <h4 class="text-2xl font-bold">지원 직무</h4>
+                    <span class="px-3 py-1 bg-slate-100 text-slate-400 text-xs font-bold rounded-md">1 AVAILABLE</span>
+                </div>
+                <div class="grid grid-cols-3 gap-6">
+                    <button class="group p-8 border-2 border-blue-600 rounded-2xl text-left bg-blue-50/30 relative overflow-hidden">
+                        <div class="relative z-10">
+                            <div class="font-bold text-lg mb-2 text-slate-900">Frontend Developer</div>
+                            <div class="text-sm text-slate-500">React, Next.js 기반의 고성능 웹 서비스 개발</div>
+                        </div>
+                        <i class="fa-solid fa-code absolute -right-4 -bottom-4 text-6xl text-blue-100/50 group-hover:scale-110 transition-transform"></i>
+                    </button>
+                    <button class="p-8 border border-slate-100 rounded-2xl text-left bg-slate-50 opacity-40 cursor-not-allowed">
+                        <div class="font-bold text-lg mb-2">Product Owner</div>
+                        <div class="text-sm text-slate-400">데이터 기반 제품 전략 및 로드맵 수립</div>
+                    </button>
+                    <button class="p-8 border border-slate-100 rounded-2xl text-left bg-slate-50 opacity-40 cursor-not-allowed">
+                        <div class="font-bold text-lg mb-2">Data Scientist</div>
+                        <div class="text-sm text-slate-400">머신러닝 모델링 및 대규모 데이터 분석</div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="resume-upload" class="w-full py-32 px-24 bg-slate-50">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl font-bold mb-6">지원 정보 분석</h2>
+                <p class="text-lg text-slate-500">이력서와 자기소개서를 분석하여 기업 맞춤형 예상 질문을 추출합니다.</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-10">
+                <div id="upload-cover-letter" class="group bg-white border-2 border-dashed border-slate-200 rounded-[40px] p-16 flex flex-col items-center justify-center space-y-6 hover:border-blue-400 hover:bg-blue-50/10 transition-all cursor-pointer">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                        <i class="fa-solid fa-file-signature text-3xl text-slate-300 group-hover:text-blue-500"></i>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xl font-bold text-slate-800">자기소개서</p>
+                        <p class="text-sm text-slate-400 mt-2">PDF, DOCX (최대 10MB)</p>
+                    </div>
+                    <button class="px-8 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-600 group-hover:border-blue-500 group-hover:text-blue-600 transition-all">파일 업로드</button>
+                </div>
+
+                <div id="upload-resume" class="group bg-white border-2 border-dashed border-slate-200 rounded-[40px] p-16 flex flex-col items-center justify-center space-y-6 hover:border-blue-400 hover:bg-blue-50/10 transition-all cursor-pointer">
+                    <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                        <i class="fa-solid fa-id-card-clip text-3xl text-slate-300 group-hover:text-blue-500"></i>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-xl font-bold text-slate-800">이력서 / 포트폴리오</p>
+                        <p class="text-sm text-slate-400 mt-2">PDF 형식 권장 (최대 20MB)</p>
+                    </div>
+                    <button class="px-8 py-3 bg-white border border-slate-200 rounded-xl font-bold text-slate-600 group-hover:border-blue-500 group-hover:text-blue-600 transition-all">파일 업로드</button>
+                </div>
+            </div>
+
+            <div class="mt-12 flex items-center justify-center gap-3 text-slate-400 text-sm font-medium">
+                <i class="fa-solid fa-user-shield text-blue-500"></i>
+                <span>개인정보는 암호화되어 처리되며, 분석 완료 후 즉시 파기됩니다.</span>
+            </div>
+
+            <div class="mt-20 flex justify-center">
+                <button class="px-16 py-5 bg-slate-900 text-white font-bold rounded-2xl hover:scale-105 transition-transform shadow-2xl shadow-slate-200">
+                    다음 단계로 이동
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="interview-setup" class="w-full py-32 px-24 bg-white">
+        <div class="max-w-4xl mx-auto bg-slate-50 rounded-[48px] p-16 border border-slate-100">
+            <h2 class="text-4xl font-bold mb-12 text-center text-slate-900">면접 시뮬레이션 설정</h2>
+            
+            <div class="space-y-12">
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="space-y-4">
+                        <label class="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1">질문 구성</label>
+                        <select class="w-full p-5 border border-slate-200 rounded-2xl bg-white outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all font-semibold">
+                            <option>5개 문항 (약 15분)</option>
+                            <option selected>10개 문항 (약 30분)</option>
+                            <option>15개 문항 (약 45분)</option>
+                        </select>
+                    </div>
+                    <div class="space-y-4">
+                        <label class="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1">면접 분위기</label>
+                        <div class="flex p-1.5 bg-slate-200/50 rounded-2xl">
+                            <button class="flex-1 py-4 bg-white rounded-xl shadow-sm font-bold text-blue-600">친절한 대화형</button>
+                            <button class="flex-1 py-4 text-slate-400 font-bold hover:text-slate-600 transition-colors">엄격한 압박형</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-10">
+                    <div class="space-y-4">
+                        <label class="text-sm font-bold text-slate-400 uppercase tracking-widest ml-1">AI 보이스 성별</label>
+                        <div class="flex p-1.5 bg-slate-200/50 rounded-2xl">
+                            <button class="flex-1 py-4 text-slate-400 font-bold hover:text-slate-600 transition-colors">남성 (Professional)</button>
+                            <button class="flex-1 py-4 bg-white rounded-xl shadow-sm font-bold text-blue-600">여성 (Warm)</button>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-end">
+                        <div class="p-5 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-4">
+                            <i class="fa-solid fa-lightbulb text-blue-500 mt-1"></i>
+                            <span class="text-sm text-blue-700 leading-relaxed font-medium">실제 면접처럼 카메라와 마이크 권한이 필요합니다. 조용한 장소에서 시작해주세요.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-8">
+                    <button class="w-full py-6 bg-blue-600 text-white text-xl font-bold rounded-[24px] hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 transform hover:-translate-y-1">
+                        면접 시뮬레이션 시작
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="interview-session" class="w-full min-h-screen py-24 px-24 bg-slate-100 flex flex-col items-center">
+        <div class="w-full max-w-6xl flex flex-col items-center flex-1">
+            <div class="relative w-full h-[640px] bg-white rounded-[40px] overflow-hidden mb-12 shadow-2xl border border-white">
+                <div class="absolute inset-0">
+                    <div class="relative w-full h-full">  <img class="w-full h-full object-cover" src="https://gmcnqdpighpxhzpesqwf.supabase.co/storage/v1/object/public/generated-images/image-fdadce2a-0128-44f8-8992-c1b9c7d214c3.jpg" alt="A professional and friendly female interviewer in her 30s, wearing a smart casual blazer, sitting in a bright and modern office with plants in the background, looking directly into the camera with a welcoming expression, high-quality professional photography." /></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent"></div>
+                </div>
+                
+                <div class="absolute top-8 left-8 flex gap-3">
+                    <div class="px-5 py-2.5 bg-white/90 backdrop-blur rounded-full text-sm font-bold text-slate-900 shadow-lg flex items-center gap-2">
+                        <span class="w-2 h-2 bg-red-500 rounded-full animate-ping"></span>
+                        LIVE SESSION
+                    </div>
+                    <div class="px-5 py-2.5 bg-slate-900/80 backdrop-blur rounded-full text-sm font-bold text-white shadow-lg">
+                        TOSS | Frontend Dev
+                    </div>
+                </div>
+
+                <div class="absolute top-8 right-8">
+                    <div class="px-5 py-2.5 bg-white/90 backdrop-blur rounded-full text-sm font-mono font-bold text-slate-900 shadow-lg flex items-center gap-3">
+                        <i class="fa-solid fa-microphone-lines text-blue-500"></i>
+                        QUESTION 02 / 10
+                    </div>
+                </div>
+
+                <div class="absolute bottom-12 left-0 right-0 flex flex-col items-center px-20">
+                    <div class="w-full max-w-3xl bg-white/95 backdrop-blur-md p-8 rounded-[32px] shadow-2xl border border-white/20 text-center transform translate-y-0 transition-all">
+                        <p class="text-2xl font-bold text-slate-900 leading-snug">
+                            "본인이 진행했던 프로젝트 중에서 기술적 한계에 부딪혔던 경험과,<br/>이를 어떻게 극복하셨는지 구체적으로 말씀해 주세요."
+                        </p>
+                        <div class="mt-6 flex items-center justify-center gap-3">
+                            <div class="flex gap-1.5 h-4 items-center">
+                                <div class="w-1.5 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                                <div class="w-1.5 h-5 bg-blue-500 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                                <div class="w-1.5 h-4 bg-blue-500 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                                <div class="w-1.5 h-6 bg-blue-500 rounded-full animate-bounce [animation-delay:0.1s]"></div>
+                            </div>
+                            <span class="text-xs font-bold text-blue-600 tracking-widest uppercase">AI Interviewer Listening...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full max-w-4xl grid grid-cols-12 gap-8">
+                <div class="col-span-8 bg-white rounded-[32px] p-10 shadow-xl flex items-center justify-between">
+                    <div class="flex items-center gap-8">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Elapsed Time</span>
+                            <span class="text-4xl font-mono font-black text-slate-900">01:42</span>
+                        </div>
+                        <div class="h-12 w-[1px] bg-slate-100"></div>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Voice Volume</span>
+                            <div class="flex gap-1 h-6 items-end">
+                                <div class="w-2 bg-blue-500 h-[40%] rounded-t-sm"></div>
+                                <div class="w-2 bg-blue-500 h-[70%] rounded-t-sm"></div>
+                                <div class="w-2 bg-blue-500 h-[55%] rounded-t-sm"></div>
+                                <div class="w-2 bg-blue-200 h-[20%] rounded-t-sm"></div>
+                                <div class="w-2 bg-blue-200 h-[15%] rounded-t-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <button class="w-20 h-20 bg-red-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg shadow-red-100 hover:scale-105 transition-transform">
+                            <i class="fa-solid fa-stop"></i>
+                        </button>
+                        <div class="flex flex-col items-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase mb-2">Finish Answer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-span-4 bg-blue-600 rounded-[32px] p-8 shadow-xl text-white flex flex-col justify-center">
+                    <h5 class="text-xs font-bold opacity-70 uppercase tracking-widest mb-4">Interview Guide</h5>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-blue-200 mt-1"></i>
+                            <span class="text-sm font-medium leading-tight">STAR 기법을 활용하여 상황, 과제, 행동, 결과를 명확히 하세요.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fa-solid fa-circle-check text-blue-200 mt-1"></i>
+                            <span class="text-sm font-medium leading-tight">기술적 키워드를 적절히 섞어 전문성을 보여주세요.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="analyzing" class="w-full h-[900px] flex flex-col items-center justify-center bg-white">
+        <div class="relative w-48 h-48 mb-12">
+            <div class="absolute inset-0 border-[6px] border-slate-50 rounded-full"></div>
+            <div class="absolute inset-0 border-[6px] border-t-blue-600 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <i class="fa-solid fa-brain text-5xl text-blue-600 animate-pulse"></i>
+            </div>
+        </div>
+        <h2 class="text-4xl font-bold mb-4 text-slate-900">면접 데이터를 분석 중입니다</h2>
+        <p class="text-xl text-slate-500 mb-12">답변의 논리성, 키워드 적합성, 그리고 비언어적 요소를 평가하고 있습니다.</p>
+        
+        <div class="w-80 h-3 bg-slate-100 rounded-full overflow-hidden mb-4">
+            <div class="h-full bg-blue-600 w-[85%] rounded-full transition-all duration-1000"></div>
+        </div>
+        <span class="text-sm font-bold text-slate-400">85% COMPLETE</span>
+        
+        <button class="mt-20 px-12 py-5 bg-slate-100 text-slate-400 font-bold rounded-2xl cursor-not-allowed">
+            리포트 생성 완료 대기 중
+        </button>
+    </section>
+
+    <section id="report" class="w-full py-32 px-24 bg-slate-50">
+        <div class="max-w-6xl mx-auto space-y-16">
+            <div class="flex justify-between items-center">
+                <div class="space-y-2">
+                    <h2 class="text-5xl font-black text-slate-900 tracking-tight">Interview Report</h2>
+                    <p class="text-lg text-slate-400 font-medium">2025.05.24 | TOSS 프론트엔드 개발자 면접 연습 결과</p>
+                </div>
+                <button class="px-8 py-4 bg-white border border-slate-200 rounded-2xl font-bold text-slate-700 flex items-center gap-3 hover:bg-slate-50 transition-all shadow-sm">
+                    <i class="fa-solid fa-download"></i> PDF 다운로드
+                </button>
+            </div>
+
+            <div id="report-summary" class="bg-white border border-slate-200 rounded-[40px] overflow-hidden shadow-xl shadow-slate-200/50">
+                <div class="p-12 border-b border-slate-100 bg-gradient-to-r from-blue-50/30 to-transparent">
+                    <h3 class="text-2xl font-bold mb-10 flex items-center gap-3">
+                        <i class="fa-solid fa-star text-blue-500"></i>
+                        종합 분석 요약
+                    </h3>
+                    <div class="grid grid-cols-12 gap-16">
+                        <div class="col-span-7 space-y-10">
+                            <div class="space-y-4">
+                                <h4 class="text-sm font-bold text-slate-900 uppercase flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-blue-500"></i> 3줄 요약
+                                </h4>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3 p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
+                                        <i class="fa-solid fa-plus-circle text-blue-600 mt-1"></i>
+                                        <p class="text-slate-700 text-sm leading-relaxed font-medium">실제 프로젝트의 성능 개선 수치를 구체적으로 제시하여 기술적 신뢰도가 매우 높습니다.</p>
+                                    </div>
+                                    <div class="flex gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <i class="fa-solid fa-minus-circle text-slate-400 mt-1"></i>
+                                        <p class="text-slate-700 text-sm leading-relaxed font-medium">답변 끝맺음이 흐려지는 경향이 있어, 핵심 주장을 더 명확하고 단호하게 표현할 필요가 있습니다.</p>
+                                    </div>
+                                    <div class="flex gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                                        <i class="fa-solid fa-lightbulb text-amber-500 mt-1"></i>
+                                        <p class="text-slate-700 text-sm leading-relaxed font-medium">협업 과정에서의 갈등 해결이나 커뮤니케이션 방식을 추가하면 조직 적합성이 더 돋보일 것입니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-8">
+                                <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">평균 답변 시간</span>
+                                    <div class="flex items-end gap-2 mt-2">
+                                        <p class="text-4xl font-black text-slate-900">55</p>
+                                        <span class="text-lg font-bold text-slate-400 mb-1">초</span>
+                                    </div>
+                                </div>
+                                <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">말 속도</span>
+                                    <div class="flex items-end gap-2 mt-2">
+                                        <p class="text-3xl font-black text-blue-600">적정</p>
+                                        <span class="text-sm font-bold text-slate-400 mb-1">평균 155 WPM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-span-5 flex flex-col border-l border-slate-100 pl-16">
+                            <h4 class="text-sm font-bold text-slate-900 uppercase mb-8 tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-chart-column text-blue-500"></i> 질문별 시간 그래프
+                            </h4>
+                            <div class="space-y-8">
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                                        <span>Q1. 자기소개 및 지원 동기</span>
+                                        <span class="text-slate-900">45s</span>
+                                    </div>
+                                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-600 rounded-full" style="width: 75%;"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                                        <span>Q2. 기술적 한계 극복 경험</span>
+                                        <span class="text-slate-900">30s</span>
+                                    </div>
+                                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-400 rounded-full" style="width: 50%;"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center text-xs font-bold text-slate-500">
+                                        <span>Q3. 협업 중 갈등 해결 사례</span>
+                                        <span class="text-slate-900">60s</span>
+                                    </div>
+                                    <div class="w-full h-4 bg-slate-100 rounded-full overflow-hidden">
+                                        <div class="h-full bg-blue-700 rounded-full" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-12 pt-8 border-t border-slate-50 text-center">
+                                <span class="text-sm font-bold text-slate-400 block mb-1">종합 점수</span>
+                                <p class="text-5xl font-black text-blue-600">88</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detailed-analysis" class="space-y-10">
+                <h3 class="text-3xl font-bold text-slate-900 px-2">질문별 심층 분석</h3>
+                
+                <div class="bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-lg shadow-slate-100">
+                    <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
+                        <div class="flex items-center gap-6">
+                            <span class="w-14 h-14 bg-slate-900 text-white rounded-2xl flex items-center justify-center text-xl font-black">01</span>
+                            <div>
+                                <h4 class="font-bold text-xl text-slate-900">자기소개 및 지원 동기</h4>
+                                <span class="text-sm text-slate-400 font-medium">답변 시간: 45초 | 속도: 적정</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-slate-400">Score</span>
+                            <div class="w-48 h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-600 w-[92%]"></div>
+                            </div>
+                            <span class="text-sm font-black text-blue-600">92</span>
+                        </div>
+                    </div>
+                    <div class="p-10 grid grid-cols-2 gap-12">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-blue-500"></i> 답변 스크립트
+                            </span>
+                            <div class="p-8 bg-slate-50 rounded-[24px] text-slate-700 text-sm leading-relaxed italic border border-slate-100">
+                                "안녕하세요, 저는 사용자 중심의 프론트엔드 개발자입니다. 지난 프로젝트에서 React 렌더링 최적화를 통해 로딩 속도를 20% 단축시킨 경험이 있으며..."
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> AI 가이드라인
+                            </span>
+                            <div class="p-8 bg-blue-50/50 rounded-[24px] text-slate-700 text-sm leading-relaxed border border-blue-100">
+                                "성과 지표를 먼저 제시한 점은 훌륭합니다. 여기에 추가로 '왜 하필 TOSS여야 하는지'에 대한 개인적인 가치관을 한 문장 더 보완한다면 완벽한 답변이 될 것입니다."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-lg shadow-slate-100">
+                    <div class="p-10 border-b border-slate-100 flex justify-between items-center bg-slate-50/30">
+                        <div class="flex items-center gap-6">
+                            <span class="w-14 h-14 bg-slate-200 text-slate-500 rounded-2xl flex items-center justify-center text-xl font-black">02</span>
+                            <div>
+                                <h4 class="font-bold text-xl text-slate-900">기술적 한계 극복 경험</h4>
+                                <span class="text-sm text-slate-400 font-medium">답변 시간: 30초 | 속도: 다소 빠름</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-slate-400">Score</span>
+                            <div class="w-48 h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-blue-600 w-[78%]"></div>
+                            </div>
+                            <span class="text-sm font-black text-blue-600">78</span>
+                        </div>
+                    </div>
+                    <div class="p-10 grid grid-cols-2 gap-12">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-microphone text-blue-500"></i> 답변 스크립트
+                            </span>
+                            <div class="p-8 bg-slate-50 rounded-[24px] text-slate-700 text-sm leading-relaxed italic border border-slate-100">
+                                "대규모 트래픽 발생 시 상태 관리 라이브러리에서 병목 현상이 발생했습니다. 이를 해결하기 위해 아키텍처를 재설계하고..."
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest flex items-center gap-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i> AI 가이드라인
+                            </span>
+                            <div class="p-8 bg-blue-50/50 rounded-[24px] text-slate-700 text-sm leading-relaxed border border-blue-100">
+                                "전문적인 용어 선택은 좋으나, 해결 과정에서 동료들과 어떻게 커뮤니케이션했는지에 대한 '협업 관점'이 부족합니다. TOSS는 협업을 중시하므로 이 점을 보강하세요."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center pt-12 pb-20">
+                <button class="px-16 py-6 bg-blue-600 text-white font-bold rounded-[24px] hover:bg-blue-700 hover:-translate-y-1 transition-all shadow-2xl shadow-blue-200 flex items-center gap-4">
+                    <i class="fa-solid fa-rotate-right"></i> 다시 연습하기
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer" class="w-full py-20 px-24 bg-white border-t border-slate-100">
+        <div class="max-w-6xl mx-auto flex justify-between items-start">
+            <div class="space-y-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-microchip text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold text-lg text-slate-800">Vinsign AI</span>
+                </div>
+                <p class="text-sm text-slate-400 max-w-sm leading-relaxed font-medium">
+                    최첨단 AI 기술을 활용하여 모든 지원자가 자신의 잠재력을 100% 발휘할 수 있도록 돕습니다. 우리는 당신의 성공적인 커리어를 응원합니다.
+                </p>
+                <div class="flex gap-4">
+                    <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition-all cursor-pointer">
+                        <i class="fa-brands fa-instagram"></i>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition-all cursor-pointer">
+                        <i class="fa-brands fa-youtube"></i>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:bg-blue-50 hover:text-blue-600 transition-all cursor-pointer">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-32">
+                <div class="space-y-6">
+                    <h5 class="text-sm font-bold text-slate-900 uppercase tracking-widest">Service</h5>
+                    <ul class="text-sm text-slate-500 space-y-4 font-medium">
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">AI 면접 연습</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">기업별 맞춤 리포트</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">이력서 분석 서비스</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">전문가 코칭 연결</li>
+                    </ul>
+                </div>
+                <div class="space-y-6">
+                    <h5 class="text-sm font-bold text-slate-900 uppercase tracking-widest">Support</h5>
+                    <ul class="text-sm text-slate-500 space-y-4 font-medium">
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">공지사항</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">자주 묻는 질문</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">1:1 문의</li>
+                        <li class="hover:text-blue-600 cursor-pointer transition-colors">제휴 제안</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-20 pt-10 border-t border-slate-50 flex justify-between items-center text-xs font-bold text-slate-400">
+            <div class="flex gap-8">
+                <span>© 2025 Vinsign AI. All rights reserved.</span>
+            </div>
+            <div class="flex gap-8">
+                <span class="hover:text-slate-600 cursor-pointer">이용약관</span>
+                <span class="text-slate-900 hover:text-blue-600 cursor-pointer">개인정보처리방침</span>
+                <span class="hover:text-slate-600 cursor-pointer">쿠키 정책</span>
+            </div>
+        </div>
+    </footer>
+</div>
+</html>
