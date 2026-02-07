@@ -156,6 +156,7 @@ export function InterviewSession() {
   const startRecording = async () => {
     if (!currentQuestion || !sessionId) return;
     if (isRecording || isSubmitting) return;
+    if (isFirstQuestion && !hasStarted) return;
 
     setElapsedTime(0);
     setRemainingTime(120);
@@ -227,7 +228,10 @@ export function InterviewSession() {
     if (!currentQuestion || !sessionId) return;
     isFinishingRef.current = false;
 
-    if (isFirstQuestion) {
+    if (isFirstQuestion && !hasStarted) {
+      setIsSpeaking(false);
+      setIsRecording(false);
+      setTimerActive(false);
       return () => {
         if (audioRef.current) {
           audioRef.current.pause();
@@ -244,7 +248,7 @@ export function InterviewSession() {
         URL.revokeObjectURL(audioRef.current.src);
       }
     };
-  }, [currentQuestion?.id]);
+  }, [currentQuestion?.id, hasStarted]);
 
   useEffect(() => {
     return () => {
