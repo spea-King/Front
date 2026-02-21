@@ -8,6 +8,44 @@
 
 **Live**: [frontend-phi-sand-33.vercel.app](https://frontend-phi-sand-33.vercel.app)
 
+## Screenshots
+
+<img src="./public/images/img1.png" alt="Landing" width="100%"/>
+
+<br/>
+
+### Setup Flow
+
+<table>
+  <tr>
+    <td align="center"><b>기업 · 직무 선택</b></td>
+    <td align="center"><b>이력서 업로드</b></td>
+    <td align="center"><b>면접 세팅</b></td>
+  </tr>
+  <tr>
+    <td><img src="./public/images/img2.png" alt="기업 직무 선택"/></td>
+    <td><img src="./public/images/img3.png" alt="이력서 업로드"/></td>
+    <td><img src="./public/images/img4.png" alt="면접 세팅"/></td>
+  </tr>
+</table>
+
+<br/>
+
+### Interview & Report
+
+<img src="./public/images/img5.png" alt="면접 진행" width="100%"/>
+
+<table>
+  <tr>
+    <td align="center"><b>종합 리포트</b></td>
+    <td align="center"><b>문항별 AI 피드백</b></td>
+  </tr>
+  <tr>
+    <td><img src="./public/images/img6.png" alt="종합 리포트"/></td>
+    <td><img src="./public/images/img7.png" alt="문항별 AI 피드백"/></td>
+  </tr>
+</table>
+
 ## Features
 
 - **Blind Audio Interview** - 질문 텍스트 없이 음성만 제공, 실제 면접 상황 재현
