@@ -1,5 +1,18 @@
-﻿import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import type { InterviewState, InterviewSettings, Question, Company, Report } from '../types';
+﻿import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
+import type {
+  InterviewState,
+  InterviewSettings,
+  Question,
+  Company,
+  Report,
+} from '../types';
 import tossLogo from '../assets/Toss_Symbol_Primary.png';
 import googleLogo from '../assets/google-color.svg';
 import kakaoLogo from '../assets/kakao.png';
@@ -27,13 +40,19 @@ interface InterviewContextType extends InterviewState {
   startSession: (overrideSettings?: InterviewSettings) => Promise<void>;
   fetchNextQuestion: () => Promise<void>;
   submitAnswerTime: (questionId: string, seconds: number) => Promise<void>;
-  submitAnswerAudio: (questionId: string, seconds: number, audio: Blob) => Promise<void>;
+  submitAnswerAudio: (
+    questionId: string,
+    seconds: number,
+    audio: Blob,
+  ) => Promise<void>;
   fetchReport: () => Promise<void>;
   parseDoc: (file: File) => Promise<string>;
   speakQuestion: (questionId: string) => Promise<string>;
 }
 
-const InterviewContext = createContext<InterviewContextType | undefined>(undefined);
+const InterviewContext = createContext<InterviewContextType | undefined>(
+  undefined,
+);
 
 const companiesSeed: Company[] = [
   {
@@ -43,16 +62,17 @@ const companiesSeed: Company[] = [
     company_summary: '모바일 플랫폼 기반의 IT 서비스 기업',
     talent_profile: ['주도성', '협업', '문제해결'],
     culture_fit: ['수평적 커뮤니케이션', '빠른 실행', '실험 문화'],
-    jobs: []
+    jobs: [],
   },
   {
     company_id: 'google',
     name: 'Google',
     logo: googleLogo,
-    company_summary: '글로벌 기술 기업으로 검색, 클라우드, AI 기반 서비스를 제공',
+    company_summary:
+      '글로벌 기술 기업으로 검색, 클라우드, AI 기반 서비스를 제공',
     talent_profile: ['문제 해결', '데이터 기반 사고', '기술적 깊이'],
     culture_fit: ['개방적 협업', '실험과 학습', '임팩트 중심'],
-    jobs: []
+    jobs: [],
   },
   {
     company_id: 'toss',
@@ -71,13 +91,18 @@ const companiesSeed: Company[] = [
           '초고속 빌드·배포 환경 구축 및 개발 도구 자동화/최적화',
           '까다로운 요구사항을 단순화하여 재사용 가능한 코드로 설계',
           '스스로 문제를 정의하고 솔루션을 제안하는 직접 의사결정',
-          '코드 리뷰, 테크 톡, 오픈소스 기여를 통한 동반 성장 추구'
-        ]
+          '코드 리뷰, 테크 톡, 오픈소스 기여를 통한 동반 성장 추구',
+        ],
       },
       { job_id: 'po', title: 'Product Owner', active: false, focus_points: [] },
-      { job_id: 'server', title: 'Server Developer', active: false, focus_points: [] }
-    ]
-  }
+      {
+        job_id: 'server',
+        title: 'Server Developer',
+        active: false,
+        focus_points: [],
+      },
+    ],
+  },
 ];
 
 const initialState: InterviewState = {
@@ -93,8 +118,8 @@ const initialState: InterviewState = {
   settings: {
     questionCount: 10,
     voice: 'female',
-    style: 'friendly'
-  }
+    style: 'friendly',
+  },
 };
 
 const API_BASE = 'http://localhost:8000';
@@ -103,7 +128,9 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<InterviewState>(initialState);
   const [questions, setQuestionsState] = useState<Question[]>([]);
   const [elapsedTime, setElapsedTimeState] = useState(0);
-  const [voiceVolume, setVoiceVolumeState] = useState<number[]>([40, 70, 55, 20, 15]);
+  const [voiceVolume, setVoiceVolumeState] = useState<number[]>([
+    40, 70, 55, 20, 15,
+  ]);
   const [companies] = useState<Company[]>(companiesSeed);
   const [report, setReport] = useState<Report | null>(null);
 
@@ -113,13 +140,19 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, currentQuestionIndex: index }));
   };
 
-  const setRemainingTime = useCallback((time: number | ((prev: number) => number)) => {
-    if (typeof time === 'function') {
-      setState(prev => ({ ...prev, remainingTime: time(prev.remainingTime ?? 120) }));
-      return;
-    }
-    setState(prev => ({ ...prev, remainingTime: time }));
-  }, []);
+  const setRemainingTime = useCallback(
+    (time: number | ((prev: number) => number)) => {
+      if (typeof time === 'function') {
+        setState(prev => ({
+          ...prev,
+          remainingTime: time(prev.remainingTime ?? 120),
+        }));
+        return;
+      }
+      setState(prev => ({ ...prev, remainingTime: time }));
+    },
+    [],
+  );
 
   const setIsRecording = (recording: boolean) => {
     setState(prev => ({ ...prev, isRecording: recording }));
@@ -149,13 +182,16 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, settings }));
   };
 
-  const setElapsedTime = useCallback((time: number | ((prev: number) => number)) => {
-    if (typeof time === 'function') {
-      setElapsedTimeState(prev => time(prev));
-      return;
-    }
-    setElapsedTimeState(time);
-  }, []);
+  const setElapsedTime = useCallback(
+    (time: number | ((prev: number) => number)) => {
+      if (typeof time === 'function') {
+        setElapsedTimeState(prev => time(prev));
+        return;
+      }
+      setElapsedTimeState(time);
+    },
+    [],
+  );
 
   const setVoiceVolume = (volume: number[]) => {
     setVoiceVolumeState(volume);
@@ -178,7 +214,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     form.append('file', file);
     const res = await fetch(`${API_BASE}/api/session/parse-doc`, {
       method: 'POST',
-      body: form
+      body: form,
     });
     const data = await res.json();
     return data.text || '';
@@ -197,13 +233,13 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       self_intro_text: state.selfIntroText,
       question_count: effectiveSettings.questionCount,
       voice: effectiveSettings.voice,
-      style: effectiveSettings.style
+      style: effectiveSettings.style,
     };
 
     const res = await fetch(`${API_BASE}/api/session/start`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
 
     if (!res.ok) {
@@ -214,7 +250,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     const firstQuestion: Question = {
       id: data.question.question_id,
       text: data.question.text,
-      timeLimit: data.question.time_limit_seconds
+      timeLimit: data.question.time_limit_seconds,
     };
 
     setState(prev => ({
@@ -222,7 +258,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       sessionId: data.session_id,
       currentQuestionIndex: 0,
       remainingTime: firstQuestion.timeLimit,
-      settings: effectiveSettings
+      settings: effectiveSettings,
     }));
     setQuestionsState([firstQuestion]);
     setElapsedTimeState(0);
@@ -233,7 +269,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     const res = await fetch(`${API_BASE}/api/question/next`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: state.sessionId })
+      body: JSON.stringify({ session_id: state.sessionId }),
     });
 
     if (!res.ok) {
@@ -244,7 +280,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
     const nextQuestion: Question = {
       id: data.question_id,
       text: data.text,
-      timeLimit: data.time_limit_seconds
+      timeLimit: data.time_limit_seconds,
     };
     setQuestionsState(prev => [...prev, nextQuestion]);
   };
@@ -257,12 +293,16 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       body: JSON.stringify({
         session_id: state.sessionId,
         question_id: questionId,
-        answer_seconds: seconds
-      })
+        answer_seconds: seconds,
+      }),
     });
   };
 
-  const submitAnswerAudio = async (questionId: string, seconds: number, audio: Blob) => {
+  const submitAnswerAudio = async (
+    questionId: string,
+    seconds: number,
+    audio: Blob,
+  ) => {
     if (!state.sessionId) return;
     const form = new FormData();
     form.append('session_id', state.sessionId);
@@ -272,7 +312,7 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
 
     await fetch(`${API_BASE}/api/question/answer-audio`, {
       method: 'POST',
-      body: form
+      body: form,
     });
   };
 
@@ -283,8 +323,8 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         session_id: state.sessionId,
-        question_id: questionId
-      })
+        question_id: questionId,
+      }),
     });
     if (!res.ok) {
       throw new Error('tts failed');
@@ -331,12 +371,24 @@ export function InterviewProvider({ children }: { children: ReactNode }) {
       submitAnswerAudio,
       fetchReport,
       parseDoc,
-      speakQuestion
+      speakQuestion,
     }),
-    [state, currentQuestion, elapsedTime, voiceVolume, questions, companies, report]
+    [
+      state,
+      currentQuestion,
+      elapsedTime,
+      voiceVolume,
+      questions,
+      companies,
+      report,
+    ],
   );
 
-  return <InterviewContext.Provider value={value}>{children}</InterviewContext.Provider>;
+  return (
+    <InterviewContext.Provider value={value}>
+      {children}
+    </InterviewContext.Provider>
+  );
 }
 
 export function useInterview() {
