@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import type { SpeedLabel } from '../../types/question';
 import { Badge } from '../ui/Badge';
@@ -12,6 +12,7 @@ interface QuestionAnalysisCardProps {
   speedLabel: SpeedLabel;
   aiSuggestedAnswer: string;
   oneLineReview: string;
+  answerAudio?: Blob;
 }
 
 const MAX_SECONDS = 120;
@@ -79,8 +80,21 @@ export function QuestionAnalysisCard({
   speedLabel,
   aiSuggestedAnswer,
   oneLineReview,
+  answerAudio,
 }: QuestionAnalysisCardProps) {
   const timeWidthPercent = Math.min((answerTime / MAX_SECONDS) * 100, 100);
+  // Create object URL for audio blob
+  const audioUrl = useMemo(() => {
+    if (!answerAudio) return null;
+    return URL.createObjectURL(answerAudio);
+  }, [answerAudio]);
+
+  // Revoke created object URL on change/unmount
+  useEffect(() => {
+    return () => {
+      if (audioUrl) URL.revokeObjectURL(audioUrl);
+    };
+  }, [audioUrl]);
 
   return (
     <Card className="flex flex-col gap-6">
@@ -118,7 +132,14 @@ export function QuestionAnalysisCard({
 
       <div className="flex flex-col gap-2">
         <CollapsibleSection title="내 답변 기록" defaultOpen>
-          <p className="font-sans italic">{answerText}</p>
+          <div className="flex flex-col gap-3">
+            {audioUrl ? (
+              <audio controls src={audioUrl} className="w-full" />
+            ) : (
+              <p className="text-xs text-ghost/50">음성 기록이 없습니다.</p>
+            )}
+            <p className="font-sans italic whitespace-pre-wrap">{answerText}</p>
+          </div>
         </CollapsibleSection>
 
         <CollapsibleSection title="AI 추천 모범 답변">

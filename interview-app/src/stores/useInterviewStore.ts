@@ -12,6 +12,8 @@ interface AnswerEntry {
 interface InterviewState {
   questions: Question[];
   ttsBlobs: Map<number, Blob>;
+  // User's recorded answers per question
+  answerAudios: Map<number, Blob>;
   currentIndex: number;
   answers: Map<number, AnswerEntry>;
   isLoading: boolean;
@@ -20,6 +22,7 @@ interface InterviewState {
   setQuestions: (questions: Question[]) => void;
   setTtsBlob: (order: number, blob: Blob) => void;
   setAllTtsBlobs: (blobs: Map<number, Blob>) => void;
+  setAnswerAudio: (order: number, blob: Blob) => void;
   advanceQuestion: () => void;
   setAnswer: (order: number, text: string, duration: number, wpm: number, speedLabel: SpeedLabel) => void;
   setLoading: (loading: boolean) => void;
@@ -31,6 +34,7 @@ interface InterviewState {
 const initialState = {
   questions: [] as Question[],
   ttsBlobs: new Map<number, Blob>(),
+  answerAudios: new Map<number, Blob>(),
   currentIndex: 0,
   answers: new Map<number, AnswerEntry>(),
   isLoading: false,
@@ -49,6 +53,12 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
   },
 
   setAllTtsBlobs: (blobs) => set({ ttsBlobs: new Map(blobs) }),
+
+  setAnswerAudio: (order, blob) => {
+    const next = new Map(get().answerAudios);
+    next.set(order, blob);
+    set({ answerAudios: next });
+  },
 
   advanceQuestion: () => {
     const { currentIndex, questions } = get();
@@ -76,6 +86,7 @@ export const useInterviewStore = create<InterviewState>((set, get) => ({
     set({
       questions: [],
       ttsBlobs: new Map<number, Blob>(),
+      answerAudios: new Map<number, Blob>(),
       currentIndex: 0,
       answers: new Map<number, AnswerEntry>(),
       isLoading: false,

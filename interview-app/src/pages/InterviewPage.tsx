@@ -5,6 +5,7 @@ import { useTimer } from '../hooks/useTimer';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import { calculateWpm, getSpeedLabel } from '../lib/wpmCalculator';
 import api from '../services/api';
+import { useSessionStore } from '../stores/useSessionStore';
 import { InterviewerAvatar } from '../components/interview/InterviewerAvatar';
 import { TimerBar } from '../components/interview/TimerBar';
 import { StructureGuide } from '../components/interview/StructureGuide';
@@ -21,6 +22,7 @@ type InterviewPhase = 'playing_tts' | 'waiting_start' | 'recording' | 'processin
 export default function InterviewPage() {
   const navigate = useNavigate();
   const interview = useInterviewStore();
+  const session = useSessionStore();
   const timer = useTimer(ANSWER_TIME);
   const audioRecorder = useAudioRecorder();
 
@@ -122,7 +124,11 @@ export default function InterviewPage() {
 
     try {
       const audioBlob = await audioRecorder.stopRecording();
-      const transcribedText = await api.transcribeAudio(audioBlob);
+      // Save user's recorded audio for this question
+      interview.setAnswerAudio(currentQuestion.order, audioBlob);
+      // Provide domain hint to STT with question and context
+      const prompt = `${currentQuestion.questionText}\nContext: ${currentQuestion.context}`;
+      const transcribedText = await api.transcribeAudio(audioBlob, { prompt, language: session.language });
 
       const wpm = calculateWpm(transcribedText, duration);
       const speedLabel = getSpeedLabel(wpm);

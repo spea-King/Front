@@ -41,30 +41,7 @@ interface RawReport {
   readonly questionAnalyses: readonly RawQuestionAnalysis[];
 }
 
-function buildSystemPrompt(language: 'ko' | 'en' = 'ko'): string {
-  if (language === 'en') {
-    return `You are a professional interview coach.
-Analyze the candidate's answers and provide constructive feedback.
-
-Important: This is a coaching tool, not a pass/fail decision.
-Highlight strengths first, and suggest specific improvements.
-
-Return JSON strictly in this format:
-{
-  "summary": "3-sentence summary (strengths + improvements, in English)",
-  "avgAnswerTime": average answer time (seconds, number),
-  "avgWpm": average words per minute (number),
-  "questionAnalyses": [
-    {
-      "questionOrder": question order (number),
-      "answerTime": answer time (seconds, number),
-      "speedLabel": "fast" | "normal" | "slow",
-      "aiSuggestedAnswer": "ideal sample answer (English)",
-      "oneLineReview": "one-line review (strength + improvement, English)"
-    }
-  ]
-}`;
-  }
+function buildSystemPromptKo(): string {
   return `당신은 전문 면접 코칭 전문가입니다.
 지원자의 면접 답변을 분석하여 건설적인 피드백을 제공합니다.
 
@@ -88,7 +65,31 @@ Return JSON strictly in this format:
 }`;
 }
 
-function buildUserPrompt(params: GenerateReportParams): string {
+function buildSystemPromptEn(): string {
+  return `You are a professional interview coach.
+Analyze the candidate's answers and provide constructive feedback.
+
+Important: This is a coaching tool, not a pass/fail decision.
+Highlight strengths first, and suggest specific improvements.
+
+Return JSON strictly in this format:
+{
+  "summary": "3-sentence summary (strengths + improvements, in English)",
+  "avgAnswerTime": average answer time (seconds, number),
+  "avgWpm": average words per minute (number),
+  "questionAnalyses": [
+    {
+      "questionOrder": question order (number),
+      "answerTime": answer time (seconds, number),
+      "speedLabel": "fast" | "normal" | "slow",
+      "aiSuggestedAnswer": "ideal sample answer (English)",
+      "oneLineReview": "one-line review (strength + improvement, English)"
+    }
+  ]
+}`;
+}
+
+function buildUserPromptKo(params: GenerateReportParams): string {
   const qaPairs = params.questions.map((q) => {
     const answer = params.answers.find((a) => a.order === q.order);
     return `
@@ -114,15 +115,43 @@ ${qaPairs.join('\n')}
 avgAnswerTime과 avgWpm은 실제 데이터를 기반으로 계산해주세요.`;
 }
 
+function buildUserPromptEn(params: GenerateReportParams): string {
+  const qaPairs = params.questions.map((q) => {
+    const answer = params.answers.find((a) => a.order === q.order);
+    return `
+[Question ${q.order}] (${q.questionType})
+Question: ${q.questionText}
+Intent: ${q.context}
+Answer: ${answer?.answerText ?? '(no answer)'}
+Answer time: ${answer?.answerDuration ?? 0}s
+Speaking speed: ${answer?.answerWpm ?? 0} WPM (${answer?.speedLabel ?? 'normal'})`;
+  });
+
+  return `[Interview Info]
+- Company: ${params.companyName}
+- Role: ${params.jobTitle}
+
+[Resume]
+${params.resumeText}
+
+[Q&A]
+${qaPairs.join('\n')}
+
+Please analyze the interview and produce the coaching report in English.
+Compute avgAnswerTime and avgWpm based on the provided data.`;
+}
+
 export async function generateReport(
   params: GenerateReportParams,
 ): Promise<Report> {
+  const language = params.interviewLanguage ?? 'ko';
+
   const response = await openai.chat.completions.create({
     model: 'gpt-4o',
     response_format: { type: 'json_object' },
     messages: [
-      { role: 'system', content: buildSystemPrompt() },
-      { role: 'user', content: buildUserPrompt(params) },
+      { role: 'system', content: language === 'en' ? buildSystemPromptEn() : buildSystemPromptKo() },
+      { role: 'user', content: language === 'en' ? buildUserPromptEn(params) : buildUserPromptKo(params) },
     ],
     temperature: 0.5,
   });

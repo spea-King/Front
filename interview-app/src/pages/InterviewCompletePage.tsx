@@ -42,6 +42,7 @@ export default function InterviewCompletePage() {
         resumeText: session.resumeText,
         questions: interview.questions,
         answers: interview.answers,
+        interviewLanguage: session.language,
       });
 
       reportStore.setReport(report);

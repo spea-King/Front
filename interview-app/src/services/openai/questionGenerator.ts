@@ -11,6 +11,7 @@ interface GenerateQuestionsParams {
   readonly resumeText: string;
   readonly questionCount: number;
   readonly interviewStyle: 'friendly' | 'pressure';
+  readonly interviewLanguage: 'ko' | 'en';
 }
 
 interface RawQuestion {
@@ -21,13 +22,16 @@ interface RawQuestion {
 }
 
 function buildSystemPrompt(params: GenerateQuestionsParams): string {
-  const styleGuide =
-    params.interviewStyle === 'pressure'
-      ? '당신은 날카롭고 도전적인 면접관입니다. 지원자의 답변을 깊이 파고들고, 구체적인 근거를 요구하며, 압박 질문을 통해 진정한 역량을 검증합니다.'
-      : '당신은 따뜻하고 격려적인 면접관입니다. 지원자가 편안하게 자신의 경험을 이야기할 수 있도록 유도하며, 긍정적인 분위기에서 역량을 파악합니다.';
+  const isKo = params.interviewLanguage === 'ko';
 
-  return `당신은 ${params.companyName}의 경험 많은 한국어 면접관입니다.
-${styleGuide}
+  if (isKo) {
+    const styleGuideKo =
+      params.interviewStyle === 'pressure'
+        ? '당신은 날카롭고 도전적인 면접관입니다. 지원자의 답변을 깊이 파고들고, 구체적인 근거를 요구하며, 압박 질문을 통해 진정한 역량을 검증합니다.'
+        : '당신은 따뜻하고 격려적인 면접관입니다. 지원자가 편안하게 자신의 경험을 이야기할 수 있도록 유도하며, 긍정적인 분위기에서 역량을 파악합니다.';
+
+    return `당신은 ${params.companyName}의 경험 많은 한국어 면접관입니다.
+${styleGuideKo}
 
 [회사 정보]
 - 회사명: ${params.companyName}
@@ -54,6 +58,44 @@ ${styleGuide}
       "questionText": "질문 내용",
       "questionType": "intro" | "resume" | "competency" | "situational",
       "context": "이 질문을 하는 이유"
+    }
+  ]
+}`;
+  }
+
+  const styleGuideEn =
+    params.interviewStyle === 'pressure'
+      ? 'You are a sharp and challenging interviewer. You drill into answers, ask for concrete evidence, and verify true competence through pressure questions.'
+      : 'You are a warm and encouraging interviewer. You help candidates speak comfortably while assessing their competencies in a positive atmosphere.';
+
+  return `You are an experienced English-language interviewer at ${params.companyName}.
+${styleGuideEn}
+
+[Company]
+- Name: ${params.companyName}
+- Summary: ${params.companySummary}
+- Talent Profile: ${params.talentProfile.join(', ')}
+- Culture Fit: ${params.cultureFit.join(', ')}
+
+[Hiring Role]
+- Title: ${params.jobTitle}
+- Focus Points: ${params.focusPoints.join(', ')}
+
+Follow these rules strictly:
+1. Generate ${params.questionCount} interview questions in total.
+2. The first question (order: 1) must be a self-introduction (questionType: "intro").
+3. Mix resume-based, competency, and situational questions for the rest.
+4. Include a brief context explaining why each question is asked.
+5. Write all questions and contexts in English.
+
+Return a JSON object strictly in this format:
+{
+  "questions": [
+    {
+      "order": 1,
+      "questionText": "The question text",
+      "questionType": "intro" | "resume" | "competency" | "situational",
+      "context": "Reason for asking this question"
     }
   ]
 }`;

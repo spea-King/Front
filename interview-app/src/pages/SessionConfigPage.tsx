@@ -41,13 +41,19 @@ export default function SessionConfigPage() {
         resumeText: session.resumeText,
         questionCount: session.questionCount,
         interviewStyle: session.interviewStyle,
+        interviewLanguage: session.language,
       });
 
       interviewStore.setQuestions(questions);
 
       const ttsBlobs = new Map<number, Blob>();
       const ttsPromises = questions.map(async (q) => {
-        const blob = await api.generateTTS(q.questionText, session.voiceGender, session.interviewStyle);
+        const blob = await api.generateTTS(
+          q.questionText,
+          session.voiceGender,
+          session.interviewStyle,
+          session.language,
+        );
         ttsBlobs.set(q.order, blob);
       });
       await Promise.all(ttsPromises);
@@ -78,6 +84,25 @@ export default function SessionConfigPage() {
       </div>
 
       <div className="space-y-10 flex-1">
+        <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <label className="block text-lg font-semibold text-white tracking-wide mb-1">
+                면접 언어
+              </label>
+              <p className="text-sm text-ghost/60">질문과 음성 언어를 선택합니다.</p>
+            </div>
+            <Toggle
+              options={[
+                { value: 'ko', label: '한국어' },
+                { value: 'en', label: 'English' },
+              ]}
+              value={session.language}
+              onChange={(v) => session.setLanguage(v as 'ko' | 'en')}
+            />
+          </div>
+        </div>
+
         <div className="p-8 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-md">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>

@@ -17,8 +17,9 @@ export default function ReportPage() {
 
   const questionsWithAnswers = interview.questions.map((q) => {
     const answer = interview.answers.get(q.order);
+    const answerAudio = interview.answerAudios.get(q.order);
     const analysis = report.questionAnalyses.find((a) => a.questionOrder === q.order);
-    return { ...q, answer, analysis };
+    return { ...q, answer, answerAudio, analysis };
   });
 
   function handleRestart() {
@@ -76,6 +77,7 @@ export default function ReportPage() {
                   questionText={item.questionText}
                   answerText={item.answer?.text ?? '(응답 기록 없음)'}
                   answerTime={item.answer?.duration ?? 0}
+                  answerAudio={item.answerAudio}
                   speedLabel={item.analysis?.speedLabel ?? 'normal'}
                   aiSuggestedAnswer={item.analysis?.aiSuggestedAnswer ?? '제안을 생성할 수 없습니다.'}
                   oneLineReview={item.analysis?.oneLineReview ?? '분석 결과 없음'}

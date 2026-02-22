@@ -5,10 +5,15 @@ export type TtsVoice = 'onyx' | 'echo' | 'nova' | 'alloy';
 export function selectVoice(
   gender: 'male' | 'female',
   style: 'friendly' | 'pressure',
+  language: 'ko' | 'en'
 ): TtsVoice {
-  if (gender === 'male') {
-    return style === 'friendly' ? 'onyx' : 'echo';
+  // Simple mapping tuned by language to slightly vary timbre
+  if (language === 'en') {
+    if (gender === 'male') return style === 'friendly' ? 'alloy' : 'echo';
+    return style === 'friendly' ? 'nova' : 'alloy';
   }
+  // Korean default mapping
+  if (gender === 'male') return style === 'friendly' ? 'onyx' : 'echo';
   return style === 'friendly' ? 'nova' : 'alloy';
 }
 

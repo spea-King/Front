@@ -1,12 +1,12 @@
 import type { Question } from '../types/question';
 import type { Report } from '../types/report';
-import type { InterviewStyle, VoiceGender } from '../types/session';
+import type { InterviewLanguage, InterviewStyle, VoiceGender } from '../types/session';
 import type { Company } from '../types/company';
 
 import { generateQuestions as openaiGenerateQuestions } from './openai/questionGenerator';
 import { selectVoice, generateTTS as openaiGenerateTTS } from './openai/ttsService';
 import { transcribeAudio as openaiTranscribeAudio } from './openai/sttService';
-import { generateReport as openaiGenerateReport } from './openai/reportGenerator';
+import { generateReport as openaiGenerateReport } from './openai/reportGeneratorLocalized';
 
 interface GenerateQuestionsParams {
   readonly company: Company;
@@ -14,6 +14,7 @@ interface GenerateQuestionsParams {
   readonly resumeText: string;
   readonly questionCount: number;
   readonly interviewStyle: InterviewStyle;
+  readonly interviewLanguage: InterviewLanguage;
 }
 
 interface GenerateReportParams {
@@ -25,6 +26,7 @@ interface GenerateReportParams {
     number,
     { text: string; duration: number; wpm: number; speedLabel: string }
   >;
+  readonly interviewLanguage: InterviewLanguage;
 }
 
 // When backend is ready, ONLY this file needs to change to fetch('/api/...') calls.
@@ -45,6 +47,7 @@ const api = {
       resumeText: params.resumeText,
       questionCount: params.questionCount,
       interviewStyle: params.interviewStyle,
+      interviewLanguage: params.interviewLanguage,
     });
   },
 
@@ -52,13 +55,17 @@ const api = {
     text: string,
     gender: VoiceGender,
     style: InterviewStyle,
+    language: InterviewLanguage,
   ): Promise<Blob> {
-    const voice = selectVoice(gender, style);
+    const voice = selectVoice(gender, style, language);
     return openaiGenerateTTS(text, voice);
   },
 
-  async transcribeAudio(audioBlob: Blob): Promise<string> {
-    return openaiTranscribeAudio(audioBlob);
+  async transcribeAudio(
+    audioBlob: Blob,
+    opts?: { prompt?: string; language?: string }
+  ): Promise<string> {
+    return openaiTranscribeAudio(audioBlob, opts);
   },
 
   async generateReport(params: GenerateReportParams): Promise<Report> {
@@ -88,6 +95,7 @@ const api = {
         context: q.context,
       })),
       answers,
+      interviewLanguage: params.interviewLanguage,
     });
   },
 } as const;
