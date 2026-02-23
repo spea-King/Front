@@ -2,6 +2,60 @@ import type { Company } from '../types/company';
 
 export const companies: readonly Company[] = [
   {
+    company_id: 'kakao',
+    name: 'Kakao',
+    company_summary: '국민 메신저를 기반으로 한 플랫폼 테크 기업',
+    talent_profile: [],
+    culture_fit: [],
+    jobs: [
+      {
+        job_id: 'frontend',
+        title: 'Frontend Developer',
+        active: false,
+        focus_points: [],
+      },
+      {
+        job_id: 'po',
+        title: 'Product Owner',
+        active: false,
+        focus_points: [],
+      },
+      {
+        job_id: 'server',
+        title: 'Server Developer',
+        active: false,
+        focus_points: [],
+      },
+    ],
+  },
+  {
+    company_id: 'google',
+    name: 'Google',
+    company_summary: '검색·클라우드·AI를 선도하는 글로벌 빅테크',
+    talent_profile: [],
+    culture_fit: [],
+    jobs: [
+      {
+        job_id: 'frontend',
+        title: 'Frontend Developer',
+        active: false,
+        focus_points: [],
+      },
+      {
+        job_id: 'po',
+        title: 'Product Owner',
+        active: false,
+        focus_points: [],
+      },
+      {
+        job_id: 'server',
+        title: 'Server Developer',
+        active: false,
+        focus_points: [],
+      },
+    ],
+  },
+  {
     company_id: 'toss',
     name: 'TOSS',
     company_summary: '금융 플랫폼 기반의 핀테크 서비스 기업',

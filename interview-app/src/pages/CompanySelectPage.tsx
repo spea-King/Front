@@ -5,6 +5,15 @@ import { useSessionStore } from '../stores/useSessionStore';
 import type { Job } from '../types/company';
 import { MagneticButton } from '../components/ui/MagneticButton';
 import { Card } from '../components/ui/Card';
+import kakaoLogo from '../assets/kakao.png';
+import googleLogo from '../assets/google-color.svg';
+import tossLogo from '../assets/Toss_Symbol_Primary.png';
+
+const companyLogoMap: Record<string, string> = {
+  kakao: kakaoLogo,
+  google: googleLogo,
+  toss: tossLogo,
+};
 
 export default function CompanySelectPage() {
   const navigate = useNavigate();
@@ -55,8 +64,16 @@ export default function CompanySelectPage() {
               onClick={() => handleCompanySelect(c.company_id)}
             >
               <div className="flex items-center gap-5">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-bold transition-colors ${selectedCompany === c.company_id ? 'bg-electric-blue text-white' : 'bg-white/10 text-ghost'}`}>
-                  {c.name.substring(0, 1)}
+                <div className="w-14 h-14 rounded-2xl flex items-center justify-center bg-white">
+                  {companyLogoMap[c.company_id] ? (
+                    <img
+                      src={companyLogoMap[c.company_id]}
+                      alt={`${c.name} logo`}
+                      className="w-8 h-8 object-contain"
+                    />
+                  ) : (
+                    <span className="text-xl font-bold text-gray-800">{c.name.substring(0, 1)}</span>
+                  )}
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white tracking-wide">{c.name}</h3>

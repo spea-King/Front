@@ -38,9 +38,21 @@ export default function LandingPage() {
           AI Interview <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-emerald">Coach</span>
         </h1>
 
-        <p className="stagger-item mb-20 text-xl font-drama italic text-ghost/80 max-w-2xl leading-relaxed text-center">
+        <p className="stagger-item mb-12 text-xl font-drama italic text-ghost/80 max-w-2xl leading-relaxed text-center">
           "답을 알려주는 AI가 아니라, <br/><span className="text-ghost not-italic font-bold font-sans">말하는 연습</span>을 돕습니다."
         </p>
+
+        <div className="stagger-item w-full mb-20">
+          <div className="relative w-full aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
+            <iframe
+              src="https://www.youtube.com/embed/1nHT11ePt4M?rel=0&modestbranding=1"
+              title="AI Interview Coach 소개 영상"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="absolute inset-0 w-full h-full"
+            />
+          </div>
+        </div>
 
         <div className="stagger-item w-full grid grid-cols-1 md:grid-cols-3 gap-6 mb-20 text-left">
           <FeatureCard
